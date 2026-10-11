@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+  <title>Tresor logo: one key in three shares around a keyhole</title>
+  <rect width="480" height="480" rx="96" fill="#14202B"/>
+  <g fill="none" stroke-width="44" stroke-linecap="round">
+    <path d="M264.31 102.13 A140 140 0 0 1 371.56 287.88" stroke="#D2533E"/>
+    <path d="M347.24 329.99 A140 140 0 0 1 132.76 329.99" stroke="#F5F3EE"/>
+    <path d="M108.44 287.88 A140 140 0 0 1 215.69 102.13" stroke="#4E8BB8"/>
+  </g>
+  <circle cx="240" cy="222" r="30" fill="#F5F3EE"/>
+  <path d="M226 240 L254 240 L264 292 L216 292 Z" fill="#F5F3EE"/>
+</svg>

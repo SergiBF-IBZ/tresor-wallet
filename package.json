@@ -1,0 +1,12 @@
+{
+  "name": "swissquote-wallet",
+  "private": true,
+  "description": "Forwards the demo commands to core/, so they work from the project root too.",
+  "scripts": {
+    "postinstall": "cd core && npm install",
+    "demo": "npm --prefix core run demo",
+    "demo:reset": "npm --prefix core run demo:reset",
+    "demo:wipe": "npm --prefix core run demo:wipe --",
+    "test": "npm --prefix core test"
+  }
+}

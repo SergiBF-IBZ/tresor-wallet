@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swissquote Wallet</title>
+<style>
+:root {
+  --bg: #eef0f2; --phone: #ffffff; --ink: #14181d; --muted: #66707a; --line: #e2e6ea;
+  --red: #d0021b; --red-soft: #fdecee; --ok: #12805c; --ok-soft: #e4f4ed; --warn: #9a5b00; --warn-soft: #fbf0dc;
+  --chip: #f3f5f7; --radius: 14px;
+  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0b0d10; --phone: #15191e; --ink: #eef1f4; --muted: #9aa4ae; --line: #262c33;
+    --red: #ff4d61; --red-soft: #3a1b20; --ok: #4fd1a1; --ok-soft: #14302a; --warn: #f0b357; --warn-soft: #35291a; --chip: #1e242b; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; justify-content: center; padding: 24px 16px; }
+.phone { width: 100%; max-width: 390px; background: var(--phone); border-radius: 32px; border: 1px solid var(--line); padding: 22px 20px 28px; min-height: 760px; display: flex; flex-direction: column; gap: 18px; }
+header { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: -0.01em; }
+.brand i { width: 22px; height: 22px; background: var(--red); border-radius: 5px; position: relative; display: inline-block; }
+.brand i::before, .brand i::after { content: ""; position: absolute; background: #fff; }
+.brand i::before { left: 9px; top: 4px; width: 4px; height: 14px; }
+.brand i::after { left: 4px; top: 9px; width: 14px; height: 4px; }
+.net { font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 0; }
+p { margin: 0; line-height: 1.5; }
+.muted { color: var(--muted); font-size: 14px; }
+.small { font-size: 12px; }
+button { font: inherit; border: 0; border-radius: 12px; padding: 14px 16px; font-weight: 600; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.primary { background: var(--red); color: #fff; }
+.secondary { background: var(--chip); color: var(--ink); }
+.ghost { background: transparent; color: var(--muted); padding: 8px; font-weight: 500; }
+button:disabled { opacity: .5; cursor: default; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+.card { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.balance { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.addr { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-all; color: var(--muted); }
+.banner { border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.45; }
+.banner.ok { background: var(--ok-soft); color: var(--ok); }
+.banner.warn { background: var(--warn-soft); color: var(--warn); }
+.banner.err { background: var(--red-soft); color: var(--red); }
+.demo { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; color: var(--warn); background: var(--warn-soft); border-radius: 6px; padding: 2px 6px; vertical-align: middle; }
+label { font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+input { font: inherit; padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--phone); color: var(--ink); width: 100%; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg { display: inline-flex; background: var(--chip); border-radius: 999px; padding: 3px; }
+.seg button { background: transparent; color: var(--muted); padding: 5px 12px; border-radius: 999px; font-size: 13px; }
+.seg button.on { background: var(--phone); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+.chip { background: var(--chip); color: var(--ink); padding: 8px 12px; border-radius: 999px; font-weight: 500; font-size: 14px; }
+.list { display: flex; flex-direction: column; }
+.tx { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; text-decoration: none; color: inherit; }
+.tx:last-child { border-bottom: 0; }
+.pos { color: var(--ok); font-variant-numeric: tabular-nums; }
+.neg { color: var(--ink); font-variant-numeric: tabular-nums; }
+.summary { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 14px; }
+.summary dt { color: var(--muted); }
+.summary dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; word-break: break-all; }
+.center { text-align: center; align-items: center; }
+.icon { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; margin: 8px auto; }
+.icon.ok { background: var(--ok-soft); color: var(--ok); }
+.icon.err { background: var(--red-soft); color: var(--red); }
+.icon.wait { background: var(--chip); }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--line); border-top-color: var(--red); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.faceid { position: relative; width: 180px; height: 180px; margin: 0 auto; border-radius: 50%; overflow: hidden; background: var(--chip); border: 3px solid var(--line); transition: border-color .3s; }
+.faceid video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.faceid.nocam::after { content: "☺"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 64px; color: var(--muted); }
+.faceid .scan { position: absolute; left: 0; right: 0; height: 3px; background: var(--ok); opacity: 0; top: 0; }
+.faceid.scanning { border-color: var(--ok); }
+.faceid.scanning .scan { opacity: .8; animation: scan 1.1s ease-in-out infinite alternate; }
+.faceid.matched { border-color: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+@keyframes scan { from { top: 0; } to { top: calc(100% - 3px); } }
+/* Video identification call (simulated). The call area stays dark in both themes, like a video app. */
+.call { position: relative; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #1b1f24; }
+.call video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.call .callself { position: absolute; inset: 0; display: grid; place-items: center; font-size: 84px; color: #5b6570; }
+.call .agent { position: absolute; top: 10px; right: 10px; width: 76px; height: 92px; border-radius: 10px; background: #2b3138; border: 1px solid #3b434c; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.call .agent span { width: 38px; height: 38px; border-radius: 50%; background: #d0021b; color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.call .agent small { color: #c9d1d9; font-size: 9px; text-align: center; line-height: 1.2; }
+.call .callbar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(0,0,0,.45); color: #fff; font-size: 12px; font-variant-numeric: tabular-nums; }
+.call .rec { color: #ff6b7a; font-weight: 600; }
+.call .overlay { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); border: 3px dashed rgba(255,255,255,.85); transition: all .4s; opacity: 0; }
+.call .overlay.doc { opacity: 1; width: 62%; height: 40%; border-radius: 10px; }
+.call .overlay.face { opacity: 1; width: 38%; height: 62%; border-radius: 50%; }
+.call .overlay.good { border-style: solid; border-color: #4fd1a1; }
+.call .overlay.bad { border-style: solid; border-color: #ff4d61; }
+.checks { margin: 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.checks li { color: var(--muted); padding-left: 26px; position: relative; }
+.checks li::before { content: "○"; position: absolute; left: 4px; }
+.checks li.doing { color: var(--ink); font-weight: 600; }
+.checks li.doing::before { content: "◌"; animation: spin 1.2s linear infinite; display: inline-block; }
+.checks li.ok { color: var(--ok); }
+.checks li.ok::before { content: "✓"; }
+.checks li.bad { color: var(--red); font-weight: 600; }
+.checks li.bad::before { content: "✕"; }
+.checks li.warn { color: var(--warn); font-weight: 600; }
+.checks li.warn::before { content: "!"; left: 8px; }
+.sponsored { color: var(--ok); font-weight: 600; }
+/* Card tap: the Swissquote card slides up to the phone's NFC zone, waves pulse, then a check. */
+.nfc { position: relative; height: 190px; display: flex; justify-content: center; cursor: pointer; user-select: none; }
+.nfc .zone { position: absolute; top: 6px; width: 64px; height: 64px; border-radius: 50%; border: 2px dashed var(--line); display: grid; place-items: center; font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--muted); background: var(--phone); z-index: 3; transition: border-color .3s, color .3s, background .3s; }
+.nfc .wave { position: absolute; top: 6px; width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--ok); opacity: 0; }
+.nfc .sqcard { position: absolute; bottom: 0; width: 150px; height: 94px; border-radius: 10px; background: var(--red); color: #fff; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; transform: translateY(0) rotate(-6deg); transition: transform .8s cubic-bezier(.2,.8,.2,1); z-index: 2; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.nfc .sqcard .top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: .02em; }
+.nfc .sqcard .cross { width: 14px; height: 14px; background: #fff; position: relative; border-radius: 2px; }
+.nfc .sqcard .cross::before, .nfc .sqcard .cross::after { content: ""; position: absolute; background: var(--red); }
+.nfc .sqcard .cross::before { left: 5.5px; top: 2px; width: 3px; height: 10px; }
+.nfc .sqcard .cross::after { left: 2px; top: 5.5px; width: 10px; height: 3px; }
+.nfc .sqcard .chip { width: 26px; height: 19px; border-radius: 4px; background: #e8c46a; }
+.nfc .sqcard .row2 { display: flex; justify-content: space-between; align-items: flex-end; font-size: 10px; opacity: .9; }
+.nfc .hint { position: absolute; bottom: -2px; width: 100%; text-align: center; font-size: 12px; color: var(--muted); transform: translateY(100%); }
+.nfc.tapping .sqcard { transform: translateY(-72px) rotate(0); }
+.nfc.tapping .wave { animation: wave 1s ease-out .55s infinite; }
+.nfc.tapping .wave.w2 { animation-delay: .85s; }
+.nfc.read .zone { border: 2px solid var(--ok); color: var(--ok); background: var(--ok-soft); font-size: 22px; }
+.nfc.read .wave { animation: none; opacity: 0; }
+.nfc.failed .zone { border-color: var(--red); color: var(--red); }
+@keyframes wave { from { transform: scale(1); opacity: .7; } to { transform: scale(2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .nfc .sqcard { transition: none; } .nfc.tapping .wave { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .faceid.scanning .scan { animation: none; top: 50%; } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+.steps { display: flex; gap: 6px; }
+.steps span { flex: 1; height: 4px; border-radius: 4px; background: var(--line); }
+.steps span.on { background: var(--red); }
+.countdown { font-size: 40px; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+a { color: var(--red); }
+.spacer { flex: 1; }
+</style>
+</head>
+<body>
+<main class="phone" aria-live="polite">
+  <header>
+    <span class="brand"><i aria-hidden="true"></i>Swissquote Wallet</span>
+    <span class="net" id="net">signet</span>
+  </header>
+  <section id="view" class="stack" style="flex:1"></section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const view = $('#view');
+let S = {}; // app state from /api/state
+let draft = {};
+
+async function call(path, body) {
+  const res = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const json = await res.json();
+  if (!res.ok) throw Object.assign(new Error(json.error), { code: json.code });
+  return json;
+}
+
+const chf = sats => (sats / 1e8 * S.chfPerBtc).toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
+const sats = n => `${Number(n).toLocaleString('de-CH')} sats`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const contactName = a => S.contacts.find(c => c.address === a)?.name;
+
+// Friendly text for the co-signer's refusal codes.
+const REFUSALS = {
+  SANCTIONED: ['Payment blocked', 'This recipient is on a sanctions list. Swissquote will not co-sign payments to it.'],
+  LIMIT: ['Above your daily limit', 'Large transfers need your recovery card and a 24-hour cooling-off period.'],
+  FROZEN: ['Your wallet is frozen', 'Swissquote is not co-signing. Your funds are safe. Unfreezing requires identity verification.'],
+  IDENTITY_FAILED: ['Recovery refused', 'Video identification failed. The account owner has been alerted on every channel.'],
+  WRONG_PARTY: ['Recovery refused', 'A recovery must be confirmed with the recovery card. The phone alone is not enough.'],
+  RECOVERY_IN_PROGRESS: ['Recovery in progress', 'A recovery was started for this wallet, so it stays frozen. If it was not you, cancel it from the Swissquote website or by phone.'],
+  RATE_LIMITED: ['Too many requests', 'The public block explorer is limiting requests for a few minutes. Nothing was sent. Wait a moment and try again.'],
+  NETWORK: ['No connection to the network', 'The Bitcoin network could not be reached. Nothing was sent. Check the internet connection and try again.'],
+  COSIGNER_UNREACHABLE: ['Swissquote is not responding', 'Nothing was sent. Try again in a moment. If Swissquote stays unavailable, your phone and card can still move your funds ("Swissquote unavailable?" on the home screen).'],
+  CARD_BLOCKED:['Card blocked', 'Too many wrong PINs. Use "Lost your recovery card?" to get a new one; your funds are safe.'],
+  CARD_INVALID: ['Card not recognised', 'This card is not the one registered for your wallet.'],
+  NO_CARD: ['No card detected', 'Hold your recovery card against the phone and try again.'],
+  BAD_LIMITS: ['Check your limits', null],
+  BAD_PIN: ['Check the PIN', null],
+  WRONG_PASSKEY:['Passkey not recognised', 'Swissquote could not confirm your Apple/Google passkey. Attempts are limited and the account owner has been alerted.'],
+  BACKUP_LOCKED: ['Backup locked', 'Too many failed attempts. Contact Swissquote.'],
+  NO_BACKUP: ['No backup', 'This wallet has no Apple/Google backup. Use your recovery card instead.'],
+  CARD_IN_USE:['Card already in use', 'This recovery card belongs to an existing wallet. If you lost your phone, choose "Recover my wallet".'],
+  REPLACEMENT_PENDING: ['Please wait', 'The waiting period for your new card has not ended yet.'],
+  NO_FUNDS: ['Not enough funds', null],
+  BAD_ADDRESS: ['Check the address', null],
+};
+
+function render(html) {
+  view.innerHTML = html;
+  window.scrollTo(0, 0); // every screen starts at the top
+  view.querySelector('button, input')?.focus({ preventScroll: true });
+}
+function busy(title, text) { render(`<div class="stack center" style="margin-top:80px"><div class="spinner" role="status"></div><h2>${title}</h2><p class="muted">${text}</p></div>`); }
+function failure(err, back = home) {
+  const [title, text] = REFUSALS[err.code] ?? ['Something went wrong', null];
+  render(`<div class="stack center" style="margin-top:40px">
+    <div class="icon err" aria-hidden="true">✕</div><h1>${title}</h1>
+    <p class="muted">${esc(text ?? err.message)}</p></div>
+    <div class="spacer"></div><button class="primary" id="back">Back</button>`);
+  $('#back').onclick = back;
+}
+
+// Face ID prompt (MOCK). Shows the laptop camera as a live preview with a scan animation, then
+// confirms. No face recognition happens and nothing is recorded or sent: on a real phone, Face ID
+// runs in the secure hardware and the app only receives yes or no. Without a camera (or if access
+// is denied), it falls back to a confirm button. Cancel returns to the home screen.
+function faceId(reason, onCancel = () => (S.hasWallet ? home() : welcome())) {
+  return new Promise(resolve => {
+    let stream;
+    const stop = () => stream?.getTracks().forEach(t => t.stop());
+    const finish = ok => { stop(); clearTimeout(timer); ok ? resolve(true) : (resolve(false), onCancel()); };
+    let timer;
+    render(`<div class="stack center" style="margin-top:40px">
+      <div class="faceid" id="fid"><video id="cam" autoplay playsinline muted></video><div class="scan" aria-hidden="true"></div></div>
+      <h2 id="fidtitle">Face ID</h2><p class="muted">${reason}</p>
+      <p class="small muted" id="fidhint">Look at the camera…</p>
+      <span class="demo">DEMO · CAMERA PREVIEW ONLY, NO FACE RECOGNITION, NOTHING RECORDED</span></div>
+      <div class="spacer"></div>
+      <button class="primary" id="ok" hidden>Confirm with Face ID</button><button class="ghost" id="no">Cancel</button>`);
+    $('#ok').onclick = () => finish(true);
+    $('#no').onclick = () => finish(false);
+    const fallback = () => {
+      if (!$('#fid')) return;
+      $('#fid').classList.add('nocam');
+      $('#fidhint').textContent = 'Camera not available: confirm manually.';
+      $('#ok').hidden = false;
+    };
+    if (!navigator.mediaDevices?.getUserMedia) return fallback();
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 320, height: 320 }, audio: false })
+      .then(s => {
+        stream = s;
+        if (!$('#cam')) return stop(); // the user already left this screen
+        $('#cam').srcObject = s;
+        $('#fid').classList.add('scanning');
+        timer = setTimeout(() => {
+          if (!$('#fid')) return stop();
+          $('#fid').classList.replace('scanning', 'matched');
+          $('#fidtitle').textContent = 'Face ID ✓';
+          $('#fidhint').textContent = 'Recognised';
+          timer = setTimeout(() => finish(true), 600);
+        }, 2200);
+      })
+      .catch(fallback);
+  });
+}
+
+// ---------- Video identification call (MOCK) ----------
+// Simulates Swissquote's video identification: the laptop camera as the client's tile, an agent
+// tile, and the usual checks. Nothing is recorded or sent, and no real check runs: the outcome
+// comes from the demo control (real client or impostor). Resolves to 'pass', 'fail' or null (hung up).
+const CALL_STEPS = [
+  ['Connecting to a Swissquote agent', 'none', 1400],
+  ['Hold your passport or ID card to the camera', 'doc', 1800],
+  ['Checking the document\'s security features', 'doc', 1500],
+  ['Liveness check: turn your head slowly', 'face', 1800],
+  ['Comparing your face with your KYC record', 'face', 1600],
+];
+
+function videoCall({ title, identity }) {
+  return new Promise(resolve => {
+    let stream, clock, stopped = false;
+    const started = Date.now();
+    const end = result => {
+      if (stopped) return;
+      stopped = true;
+      stream?.getTracks().forEach(t => t.stop());
+      clearInterval(clock);
+      resolve(result);
+    };
+    render(`<h1>${title}</h1>
+      <div class="call">
+        <video id="callcam" autoplay playsinline muted></video>
+        <div class="callself" id="callself" aria-hidden="true">☺</div>
+        <div class="overlay" id="overlay"></div>
+        <div class="agent" aria-hidden="true"><span>SQ</span><small>Swissquote agent</small></div>
+        <div class="callbar"><span class="rec">● Live</span><span id="calltime">00:00</span></div>
+      </div>
+      <ol class="checks" id="checks">${CALL_STEPS.map(([t]) => `<li>${t}</li>`).join('')}</ol>
+      <p class="small muted" id="callmsg" aria-live="polite"></p>
+      <span class="demo" style="align-self:center">DEMO · SIMULATED VIDEO IDENTIFICATION · NOTHING RECORDED</span>
+      <div class="spacer"></div>
+      <button class="secondary" id="hangup">End call</button>`);
+    $('#hangup').onclick = () => end(null);
+    clock = setInterval(() => {
+      const s = Math.floor((Date.now() - started) / 1000);
+      if ($('#calltime')) $('#calltime').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    }, 500);
+    navigator.mediaDevices?.getUserMedia?.({ video: { facingMode: 'user' }, audio: false })
+      .then(s => {
+        stream = s;
+        if (stopped || !$('#callcam')) return s.getTracks().forEach(t => t.stop());
+        $('#callcam').srcObject = s;
+        $('#callself').hidden = true;
+      })
+      .catch(() => {}); // no camera: the silhouette stays
+
+    (async () => {
+      const items = [...document.querySelectorAll('#checks li')];
+      for (let n = 0; n < CALL_STEPS.length; n++) {
+        if (stopped) return;
+        const [, overlay, ms] = CALL_STEPS[n];
+        items[n].className = 'doing';
+        $('#overlay').className = `overlay ${overlay}`;
+        await wait(reducedMotion() ? 300 : ms);
+        if (stopped) return;
+        // The impostor fails the face comparison against the KYC record.
+        if (identity === 'fail' && n === CALL_STEPS.length - 1) {
+          items[n].className = 'bad';
+          $('#overlay').className = 'overlay face bad';
+          $('#callmsg').textContent = 'The face does not match the identity on record. The call is being ended.';
+          await wait(1800);
+          return end('fail');
+        }
+        items[n].className = 'ok';
+      }
+      $('#overlay').className = 'overlay face good';
+      $('#callmsg').textContent = 'Identity verified. Thank you.';
+      await wait(1200);
+      end('pass');
+    })();
+  });
+}
+
+// Intro with the demo control, then the call, then `after(identity)`.
+function videoIdentification({ title, text, back, after }) {
+  render(`<h1>${title}</h1>
+    <p class="muted">${text}</p>
+    <div class="card"><h2>Before the call</h2>
+      <p class="small muted">Have your passport or ID card ready. The agent checks the document, that you are a live person, and that your face matches your Swissquote record.</p></div>
+    <div class="card"><span class="demo">DEMO CONTROL</span>
+      <p class="small muted">The checks are simulated. Choose who joins the call.</p>
+      <div class="row"><button class="primary" id="pass">Start call as the client</button><button class="secondary" id="fail">As an impostor</button></div></div>
+    <div class="spacer"></div><button class="ghost" id="cancel">Cancel</button>`);
+  $('#cancel').onclick = back;
+  const start = identity => async () => {
+    const result = await videoCall({ title: 'Video identification', identity });
+    if (result === null) return back();
+    after(result);
+  };
+  $('#pass').onclick = start('pass');
+  $('#fail').onclick = start('fail');
+}
+
+// ---------- Card tap visual (MOCK card: the animation stands in for holding a real NFC card) ----------
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function nfcVisual(hint = 'Tap the card, or press the button') {
+  return `<div class="nfc" id="nfc" role="img" aria-label="Recovery card next to the phone's NFC area">
+      <div class="wave"></div><div class="wave w2"></div>
+      <div class="zone" id="nfczone">NFC</div>
+      <div class="sqcard" aria-hidden="true">
+        <div class="top"><span class="cross"></span><span>Swissquote</span></div>
+        <div class="chip"></div>
+        <div class="row2"><span>Recovery card</span><span>)))</span></div>
+      </div>
+    </div><p class="small muted center" style="text-align:center;margin-top:4px">${hint} <span class="demo">DEMO · CARD SIMULATED</span></p>`;
+}
+
+// Plays the tap: the card moves onto the NFC zone, waves pulse, then a check mark.
+async function playTap() {
+  const n = $('#nfc');
+  if (!n) return;
+  n.classList.remove('read', 'failed');
+  n.classList.add('tapping');
+  $('#nfczone').textContent = 'NFC';
+  await wait(reducedMotion() ? 150 : 1400);
+  if (!$('#nfc')) return;
+  n.classList.add('read');
+  $('#nfczone').textContent = '✓';
+  await wait(reducedMotion() ? 100 : 400);
+}
+
+// Resets the visual after a failed read (wrong PIN, card error) so the user can tap again.
+function untap() {
+  const n = $('#nfc');
+  if (!n) return;
+  n.classList.remove('tapping', 'read');
+  n.classList.add('failed');
+  $('#nfczone').textContent = '✕';
+}
+
+// Clicking the card triggers the screen's main tap button.
+function bindCardClick(buttonId) {
+  const n = $('#nfc');
+  if (n) n.onclick = () => { const b = $(buttonId); if (b && !b.disabled) b.click(); };
+}
+
+// ---------- Onboarding ----------
+function welcome() {
+  render(`<div class="stack" style="margin-top:24px">
+      <h1>Your keys. Your crypto.<br>Swiss safety net.</h1>
+      <p class="muted">A self-custody wallet one tap away from your Swissquote account. Swissquote can never move your funds on its own.</p>
+    </div>
+    <div class="card"><h2>How it works</h2>
+      <p class="muted">Your key is split in three parts: your phone, Swissquote, and your recovery card. Any two are needed to move money.</p></div>
+    <div class="spacer"></div>
+    <button class="primary" id="create">Create my wallet</button>
+    <button class="secondary" id="recover">I lost my phone · Recover my wallet</button>`);
+  $('#create').onclick = create;
+  $('#recover').onclick = recoverStart;
+}
+
+async function create() {
+  if (!await faceId('Create your wallet')) return;
+  render(`<div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span></div>
+    <div class="stack"><h1>Activate your recovery card</h1>
+      <p class="muted">Choose a PIN, then hold the card against the top of your phone. The PIN lives only inside the card's chip.</p></div>
+    ${nfcVisual('Tap the card to activate it')}
+    <label>Card PIN<input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="6 digits" autocomplete="off"></label>
+    <p class="small" id="pinerr" role="alert" style="color:var(--red)"></p>
+    <div class="spacer"></div>
+    <button class="primary" id="tap">Tap card & create my wallet</button>`);
+  bindCardClick('#tap');
+  $('#pin').oninput = () => { $('#pinerr').textContent = ''; };
+  $('#tap').onclick = async () => {
+    const pin = $('#pin').value;
+    if (!/^\d{6,8}$/.test(pin)) { $('#pinerr').textContent = 'Enter a PIN of 6 to 8 digits.'; return; }
+    await playTap();
+    busy('Creating your wallet', 'Your phone, your card and Swissquote generate the key together. The full key never exists anywhere.');
+    try {
+      await call('/api/create', { pin });
+      render(`<div class="stack center" style="margin-top:50px"><div class="icon ok" aria-hidden="true">✓</div>
+        <h1>Wallet ready, card activated</h1><p class="muted">Keep the card at home, next to your passport. Never carry it with your phone.</p></div>
+        <div class="spacer"></div><button class="primary" id="go">Go to my wallet</button>`);
+      $('#go').onclick = boot;
+    } catch (e) { failure(e, welcome); }
+  };
+}
+
+// Card tap prompt (MOCK card). Calls `action(pin)`; on a wrong PIN it asks again.
+function cardTap({ title, text, action, back = home }) {
+  const ask = message => {
+    render(`<div class="stack center" style="margin-top:10px">
+        <h1>${title}</h1><p class="muted">${text}</p></div>
+      ${nfcVisual('Enter the PIN, then tap the card')}
+      <label>Card PIN<input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="Card PIN" autocomplete="off"></label>
+      <p class="small" id="pinerr" role="alert" style="color:var(--red)">${esc(message ?? '')}</p>
+      <div class="spacer"></div>
+      <button class="primary" id="tap">Tap card</button><button class="ghost" id="cancel">Cancel</button>`);
+    if (message) untap();
+    bindCardClick('#tap');
+    $('#pin').oninput = () => { $('#pinerr').textContent = ''; };
+    $('#cancel').onclick = back;
+    $('#tap').onclick = async () => {
+      const pin = $('#pin').value;
+      if (!pin) { $('#pinerr').textContent = 'Enter your card PIN.'; return; }
+      await playTap();
+      busy('Reading card', 'Your card signs Swissquote\'s challenge after checking the PIN.');
+      try { await action(pin); }
+      catch (e) { e.code === 'WRONG_PIN' ? ask(e.message) : failure(e, back); }
+    };
+  };
+  ask();
+}
+
+// ---------- Home ----------
+async function home() {
+  busy('Loading', 'Reading your wallet from the blockchain.');
+  try {
+    const [bal, hist, st] = await Promise.all([call('/api/balance'), call('/api/history'), call('/api/status')]);
+    const banner = st.retired
+      ? `<div class="banner err">This wallet was replaced after a recovery. Use your new phone.</div>`
+      : st.frozen ? `<div class="banner warn stack" style="gap:10px">Wallet frozen. Swissquote is not co-signing. Your funds are safe.
+          ${st.recovery ? '<span class="small">A recovery is in progress for this wallet.</span>' : '<button class="secondary" id="unfreeze">Unfreeze with video call and card</button>'}</div>` : '';
+    const rows = hist.slice(0, 6).map(t => {
+      const who = t.delta < 0 ? 'Sent' : 'Received';
+      return `<a class="tx" href="${t.url}" target="_blank" rel="noopener"><span>${who}<br><span class="small muted">${t.confirmed ? new Date(t.time * 1000).toLocaleString('de-CH') : 'Pending'}</span></span>
+        <span class="${t.delta < 0 ? 'neg' : 'pos'}" style="text-align:right">${t.delta < 0 ? '−' : '+'}${chf(Math.abs(t.delta))}<br><span class="small muted">${sats(Math.abs(t.delta))}</span></span></a>`;
+    }).join('') || '<p class="muted">No transactions yet.</p>';
+    render(`${banner}
+      <div class="card"><span class="muted">Balance</span>
+        <span class="balance">${chf(bal.sats)}</span>
+        <span class="muted small">${sats(bal.sats)}${bal.pending ? ` · ${sats(bal.pending)} pending` : ''} · indicative rate <span class="demo">DEMO</span></span>
+        <span class="addr" title="Your address">${S.address}</span>
+        ${st.ownership ? '<span class="small" style="color:var(--ok)">✓ Ownership verified by Swissquote (BIP-322)</span>' : ''}</div>
+      <div class="row"><button class="primary" id="send" ${st.frozen ? 'disabled' : ''}>Send</button><button class="secondary" id="freeze" ${st.frozen ? 'disabled' : ''}>Freeze</button></div>
+      <div class="card"><h2>Activity</h2><div class="list">${rows}</div></div>
+      ${st.frozen || S.hasBackup ? '' : `<div class="card"><h2>Lost phone and card at once?</h2>
+        <p class="muted small">Back up your phone's key part, encrypted, to your Apple/Google account. Opening it needs your account's passkey <b>and</b> Swissquote after a video check, so neither can open it alone.</p>
+        <button class="secondary" id="backup">Back up to Apple/Google account</button></div>`}
+      <div class="spacer"></div>
+      <button class="ghost" id="settings" ${st.frozen ? 'disabled' : ''}>Settings · Limits</button>
+      <button class="ghost" id="ownership" ${st.retired ? 'disabled' : ''}>${st.ownership ? 'Ownership proof' : 'Prove ownership to Swissquote'}</button>
+      <button class="ghost" id="lostcard" ${st.frozen ? 'disabled' : ''}>Lost your recovery card?</button>
+      <button class="ghost" id="escape">Swissquote unavailable? Move funds with your card</button>`);
+    $('#send').onclick = sendForm;
+    $('#freeze').onclick = freeze;
+    if ($('#unfreeze')) $('#unfreeze').onclick = unfreeze;
+    $('#lostcard').onclick = lostCard;
+    $('#settings').onclick = settings;
+    $('#ownership').onclick = () => ownership(st.ownership);
+    if ($('#backup')) $('#backup').onclick = backupSetup;
+    $('#escape').onclick = escapeForm;
+  } catch (e) { failure(e, home); }
+}
+
+// ---------- Send ----------
+function sendForm() {
+  draft = {};
+  let unit = 'CHF';
+  const chips = S.contacts.map((c, i) => `<button class="chip" data-i="${i}">${esc(c.name)}</button>`).join('');
+  render(`<h1>Send</h1>
+    <div class="stack"><span class="muted">Contacts</span><div class="chips">${chips}</div></div>
+    <label>Recipient address<input id="to" placeholder="tb1q…" autocomplete="off"></label>
+    <div class="stack" style="gap:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="muted" style="font-size:13px" id="amtlabel">Amount in CHF</span>
+        <div class="seg" role="group" aria-label="Amount unit">
+          <button class="on" data-unit="CHF" aria-pressed="true">CHF</button><button data-unit="sats" aria-pressed="false">sats</button>
+        </div>
+      </div>
+      <input id="amount" inputmode="decimal" placeholder="10.00" autocomplete="off" aria-labelledby="amtlabel">
+    </div>
+    <p class="small muted" id="conv"></p>
+    <div class="card" id="totals" hidden aria-live="polite"></div>
+    <p class="small" id="err" role="alert" style="color:var(--red)"></p>
+    <div class="spacer"></div>
+    <button class="primary" id="review">Review</button><button class="ghost" id="cancel">Cancel</button>`);
+
+  // The amount is always handled in sats; CHF is converted with the indicative demo rate.
+  const toSats = () => {
+    const n = Number($('#amount').value.replace(/['\s]/g, '').replace(',', '.'));
+    return unit === 'sats' ? Math.round(n) : Math.round(n / S.chfPerBtc * 1e8);
+  };
+  let seq = 0, timer;
+  // Live preview of fee and total once there is a recipient and an amount.
+  const preview = () => {
+    clearTimeout(timer);
+    const to = $('#to').value.trim(), amount = toSats(), mine = ++seq;
+    $('#conv').textContent = amount > 0 ? (unit === 'CHF' ? `≈ ${sats(amount)}` : `≈ ${chf(amount)}`) : '';
+    if (!to || !(amount > 0)) { $('#totals').hidden = true; return; }
+    $('#totals').hidden = false;
+    $('#totals').innerHTML = '<span class="small muted">Calculating fee…</span>';
+    timer = setTimeout(async () => {
+      try {
+        const p = await call('/api/preview', { to, amount });
+        if (mine !== seq || !$('#totals')) return;
+        $('#totals').innerHTML = `<dl class="summary" style="margin:0">
+          <dt>Amount</dt><dd>${chf(p.amount)}<br><span class="small muted">${sats(p.amount)}</span></dd>
+          <dt>Network fee</dt><dd>${feeCell(p)}</dd>
+          <dt><b>Total</b></dt><dd><b>${chf(p.amount + p.fee)}</b><br><span class="small muted">${sats(p.amount + p.fee)}</span></dd></dl>`;
+      } catch (e) {
+        if (mine !== seq || !$('#totals')) return;
+        $('#totals').innerHTML = `<span class="small" style="color:var(--red)">${esc(e.message)}</span>`;
+      }
+    }, 450);
+  };
+
+  view.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
+    if (b.dataset.unit === unit) return;
+    const current = toSats();
+    unit = b.dataset.unit;
+    view.querySelectorAll('.seg button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    $('#amtlabel').textContent = `Amount in ${unit}`;
+    $('#amount').placeholder = unit === 'CHF' ? '10.00' : '10000';
+    // Keep the same value when switching units.
+    if (current > 0) $('#amount').value = unit === 'sats' ? String(current) : (current / 1e8 * S.chfPerBtc).toFixed(2);
+    preview();
+  });
+  view.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('#to').value = S.contacts[b.dataset.i].address; $('#err').textContent = ''; preview(); });
+  $('#amount').oninput = () => { $('#err').textContent = ''; preview(); };
+  $('#to').oninput = () => { $('#err').textContent = ''; preview(); };
+  $('#cancel').onclick = home;
+  $('#review').onclick = async () => {
+    const to = $('#to').value.trim(); const amount = toSats();
+    if (!to) return $('#err').textContent = 'Choose a contact or enter an address.';
+    if (!(amount > 0)) return $('#err').textContent = 'Enter an amount greater than zero.';
+    clearTimeout(timer);
+    busy('Preparing', 'Building the transaction.');
+    try {
+      const [p, screen, bal] = await Promise.all([call('/api/preview', { to, amount }), call('/api/screen', { to, amount }), call('/api/balance')]);
+      draft = { to, amount, ...p, screen, balance: bal.sats };
+      review();
+    }
+    catch (e) { failure(e, sendForm); }
+  };
+}
+
+// Network fee cell: "Paid by Swissquote" for a sponsored (gasless) payment.
+function feeCell(p) {
+  return p.sponsored
+    ? `<span class="sponsored">Paid by Swissquote</span><br><span class="small muted">${sats(p.networkFee)} · you pay ${chf(p.fee)}</span>`
+    : `${chf(p.fee)}<br><span class="small muted">${sats(p.fee)}${p.sponsorNote ? ` · not sponsored: ${esc(p.sponsorNote)}` : ''}</span>`;
+}
+
+// Swissquote's pre-signing checks, in plain language. The co-signer enforces the same rules again.
+function screeningList(sc, who) {
+  const items = [];
+  items.push(sc.sanctioned
+    ? ['bad', 'On a sanctions list. Swissquote will refuse this payment.']
+    : ['ok', 'Recipient screened: not on sanctions lists']);
+  items.push(sc.verified
+    ? ['ok', `Verified by Swissquote: ${esc(sc.verified.name)}`]
+    : sc.knownPayee
+      ? ['ok', `You have paid ${esc(who)} before`]
+      : ['warn', 'First payment to this address. Check it character by character: scammers swap addresses.']);
+  items.push(sc.overLimit
+    ? ['bad', `Above your daily limit of ${chf(Number(sc.dailyLimit))}. Swissquote will refuse it; you can raise the limit in Settings with your card.`]
+    : sc.needsCard
+      ? ['warn', `Above your card threshold of ${chf(Number(sc.cardThreshold))} per day: your recovery card will approve this exact payment.`]
+      : ['ok', `Within your limits (spent today ${chf(Number(sc.spentToday))} of ${chf(Number(sc.dailyLimit))})`]);
+  return `<ul class="checks">${items.map(([c, t]) => `<li class="${c}">${t}</li>`).join('')}</ul>`;
+}
+
+function review() {
+  const who = contactName(draft.to) ?? 'this address';
+  const after = draft.balance - draft.amount - draft.fee;
+  render(`<h1>Review</h1>
+    <div class="banner ${draft.screen.sanctioned || draft.screen.overLimit ? 'err' : 'ok'}">You are sending <b>${chf(draft.amount)}</b> (${sats(draft.amount)}) to <b>${esc(who)}</b>. ${draft.screen.sanctioned || draft.screen.overLimit ? 'Swissquote will refuse this payment (see the checks below).' : draft.sponsored ? 'Swissquote pays the network fee.' : 'The network fee is paid from your wallet.'}</div>
+    <dl class="summary card"><dt>To</dt><dd>${esc(contactName(draft.to) ?? '')}<br><span class="addr">${esc(draft.to)}</span></dd>
+      <dt>Amount</dt><dd>${chf(draft.amount)}<br><span class="small muted">${sats(draft.amount)}</span></dd>
+      <dt>Network fee</dt><dd>${feeCell(draft)}</dd>
+      <dt><b>Total</b></dt><dd><b>${chf(draft.amount + draft.fee)}</b><br><span class="small muted">${sats(draft.amount + draft.fee)}</span></dd>
+      <dt>Signed by</dt><dd>Your phone + Swissquote</dd></dl>
+    <div class="card"><h2>Checked before you sign</h2>${screeningList(draft.screen, who)}</div>
+    <div class="card"><h2>What will happen</h2><p class="small" style="margin:0">${esc(who)} receives <b>${chf(draft.amount)}</b>. Your balance goes from ${chf(draft.balance)} to <b>${chf(after)}</b>. ${draft.sponsored ? 'The network fee is paid by Swissquote. ' : ''}Nothing else leaves your wallet.</p></div>
+    <div class="spacer"></div>
+    <button class="primary" id="confirm">Confirm with Face ID</button><button class="ghost" id="cancel">Cancel</button>`);
+  $('#cancel').onclick = home;
+  $('#confirm').onclick = async () => {
+    if (!await faceId(`Send ${chf(draft.amount)}`)) return;
+    const send = pin => call('/api/send', { to: draft.to, amount: draft.amount, pin }).then(r => done(r, 'Payment sent'));
+    busy('Signing', 'Your phone and Swissquote sign together. Neither sees the other\'s part of the key.');
+    try { await send(); }
+    catch (e) {
+      if (e.code !== 'CARD_REQUIRED') return failure(e, home);
+      // Above the card threshold: tap the card to approve this exact payment, then sign.
+      cardTap({ title: 'Tap your recovery card', text: `This payment of ${chf(draft.amount)} is above your card threshold. Your card approves this exact payment.`, action: send });
+    }
+  };
+}
+
+// ---------- Ownership proof (Travel Rule, BIP-322) ----------
+function ownership(proof) {
+  const prove = async () => {
+    busy('Signing', 'Your phone and Swissquote sign an ownership message. No money moves and there is no fee.');
+    try { ownership(await call('/api/ownership', {})); } catch (e) { failure(e, home); }
+  };
+  if (!proof) {
+    render(`<h1>Prove ownership</h1>
+      <p class="muted">Swiss rules (Travel Rule) require Swissquote to know that this address is yours before money moves between your account and this wallet.</p>
+      <div class="card"><h2>How it works</h2><p class="small muted">Your wallet signs a short message with your client number and address (BIP-322). Swissquote checks the signature. Because Swissquote cannot sign alone, a valid signature proves you took part. No money moves.</p></div>
+      <div class="spacer"></div>
+      <button class="primary" id="prove">Sign ownership message</button><button class="ghost" id="cancel">Cancel</button>`);
+    $('#prove').onclick = prove;
+    $('#cancel').onclick = home;
+    return;
+  }
+  render(`<div class="stack center" style="margin-top:20px"><div class="icon ok" aria-hidden="true">✓</div><h1>Ownership verified</h1>
+      <p class="muted">Swissquote recorded that this address belongs to client ${esc(proof.clientId)}.</p></div>
+    <div class="card"><span class="muted small">Signed message</span><pre class="small" style="white-space:pre-wrap;margin:0">${esc(proof.message)}</pre></div>
+    <div class="card"><span class="muted small">Signature (${esc(proof.format)})</span><span class="addr">${esc(proof.signature)}</span>
+      <span class="small muted">Verified ${new Date(proof.verifiedAt).toLocaleString('de-CH')}. Anyone can check it with a BIP-322 verifier for ${esc(proof.address)}.</span></div>
+    <div class="spacer"></div>
+    <button class="primary" id="back">Done</button><button class="ghost" id="again">Sign a new proof</button>`);
+  $('#back').onclick = home;
+  $('#again').onclick = prove;
+}
+
+// ---------- Settings: limits ----------
+async function settings() {
+  busy('Loading', 'Reading your limits from Swissquote.');
+  let st;
+  try { st = await call('/api/status'); } catch (e) { return failure(e, home); }
+  const toChf = s => (Number(s) / 1e8 * S.chfPerBtc).toFixed(2);
+  render(`<h1>Limits</h1>
+    <p class="muted">Payments above the card threshold need your recovery card. Payments above the daily limit are refused. Both add up over the day.</p>
+    <div class="card"><span class="muted small">Spent today</span><span>${chf(Number(st.spentToday))} · ${sats(st.spentToday)}</span></div>
+    <label>Card needed above (CHF per day)<input id="card" inputmode="decimal" value="${toChf(st.cardThreshold)}"></label>
+    <label>Daily limit (CHF)<input id="daily" inputmode="decimal" value="${toChf(st.dailyLimit)}"></label>
+    <p class="small muted">Maximum daily limit: ${chf(Number(st.maxDailyLimit))}. Lowering a limit takes effect at once; raising one needs your card.</p>
+    <p class="small" id="err" role="alert" style="color:var(--red)"></p>
+    <div class="spacer"></div>
+    <button class="primary" id="save">Save limits</button><button class="ghost" id="cancel">Cancel</button>`);
+  const toSats = id => Math.round(Number($(id).value.replace(',', '.')) / S.chfPerBtc * 1e8);
+  ['#card', '#daily'].forEach(id => $(id).oninput = () => { $('#err').textContent = ''; });
+  $('#cancel').onclick = home;
+  $('#save').onclick = async () => {
+    const cardThreshold = toSats('#card'), dailyLimit = toSats('#daily');
+    if (!(cardThreshold > 0) || !(dailyLimit > 0)) return $('#err').textContent = 'Enter amounts greater than zero.';
+    if (cardThreshold > dailyLimit) return $('#err').textContent = 'The card threshold cannot be above the daily limit.';
+    if (dailyLimit > Number(st.maxDailyLimit)) return $('#err').textContent = `The daily limit cannot exceed ${chf(Number(st.maxDailyLimit))}.`;
+    const save = pin => call('/api/limits', { cardThreshold, dailyLimit, pin }).then(() => {
+      render(`<div class="stack center" style="margin-top:50px"><div class="icon ok" aria-hidden="true">✓</div><h1>Limits saved</h1>
+        <p class="muted">Card needed above ${chf(cardThreshold)} per day · daily limit ${chf(dailyLimit)}</p></div>
+        <div class="spacer"></div><button class="primary" id="back">Done</button>`);
+      $('#back').onclick = home;
+    });
+    const raising = dailyLimit > Number(st.dailyLimit) || cardThreshold > Number(st.cardThreshold);
+    if (!raising) { busy('Saving', 'Updating your limits.'); try { await save(); } catch (e) { failure(e, settings); } return; }
+    cardTap({ title: 'Confirm with your card', text: 'Raising a limit needs your recovery card, so a stolen phone alone cannot do it.', action: save, back: settings });
+  };
+}
+
+function done(r, title, extra = '') {
+  render(`<div class="stack center" style="margin-top:40px"><div class="icon ok" aria-hidden="true">✓</div>
+      <h1>${title}</h1><p class="muted">${chf(r.amount)} · ${sats(r.amount)}</p>${extra}
+      <p class="small"><a href="${r.url}" target="_blank" rel="noopener">${r.broadcast ? 'View on the block explorer' : 'Dry run: not broadcast'}</a></p></div>
+    <div class="spacer"></div><button class="primary" id="back">Done</button>`);
+  $('#back').onclick = boot;
+}
+
+// ---------- Freeze ----------
+// Unfreeze: strong verification, i.e. a video call and then a tap of the recovery card.
+function unfreeze() {
+  videoIdentification({
+    title: 'Unfreeze your wallet',
+    text: 'Unfreezing lets Swissquote co-sign again. To make sure it is you, we verify your identity by video, then ask for your recovery card.',
+    back: home,
+    after: async identity => {
+      if (identity !== 'pass') {
+        busy('Verifying', 'Recording the result with Swissquote.');
+        try { await call('/api/unfreeze', { identity }); } catch (e) { return failure(e, home); }
+        return home();
+      }
+      cardTap({
+        title: 'Confirm with your card',
+        text: 'Identity verified. Tap your recovery card to unfreeze the wallet.',
+        action: pin => call('/api/unfreeze', { identity, pin }).then(() => {
+          render(`<div class="stack center" style="margin-top:50px"><div class="icon ok" aria-hidden="true">✓</div>
+            <h1>Wallet unfrozen</h1><p class="muted">Swissquote co-signs again. We sent a confirmation to all your channels.</p></div>
+            <div class="spacer"></div><button class="primary" id="back">Done</button>`);
+          $('#back').onclick = home;
+        }),
+      });
+    },
+  });
+}
+
+function freeze() {
+  render(`<h1>Freeze wallet?</h1>
+    <p class="muted">Swissquote stops co-signing immediately. Nobody can move funds through Swissquote, including you.</p>
+    <p class="muted">Unfreezing requires video identification. Your phone and card can still move funds if Swissquote is ever unavailable.</p>
+    <div class="spacer"></div><button class="primary" id="yes">Freeze now</button><button class="ghost" id="no">Cancel</button>`);
+  $('#no').onclick = home;
+  $('#yes').onclick = async () => { try { await call('/api/freeze', {}); home(); } catch (e) { failure(e); } };
+}
+
+// ---------- Backup to the Apple/Google account: passkey + Swissquote key ----------
+async function backupSetup() {
+  if (!await faceId('Back up with your Apple/Google passkey')) return;
+  busy('Creating your backup', 'Encrypting your phone\'s key part with your passkey and a Swissquote key, then saving it to your cloud drive.');
+  try { await call('/api/backup', {}); } catch (e) { return failure(e, home); }
+  S = await call('/api/state');
+  render(`<div class="stack center" style="margin-top:50px"><div class="icon ok" aria-hidden="true">✓</div>
+      <h1>Backup ready</h1>
+      <p class="muted">If you ever lose your phone and your card, sign in to your Apple/Google account on a new phone and verify with Swissquote by video.</p>
+      <span class="demo">DEMO · ACCOUNT AND CLOUD DRIVE SIMULATED BY FOLDERS</span></div>
+    <div class="spacer"></div><button class="primary" id="back">Done</button>`);
+  $('#back').onclick = home;
+}
+
+// ---------- Lost card: same address, new card, old card stops working ----------
+function lostCard() {
+  videoIdentification({
+    title: 'Replace your recovery card',
+    text: 'Your address and balance stay the same, and the lost card stops working. To stop someone with your phone from enrolling their own card, we first verify your identity by video and wait before activating the new card.',
+    back: home,
+    after: async identity => {
+      busy('Verifying', 'Recording the result with Swissquote.');
+      try { cardWaiting(await call('/api/card/replace/start', { identity })); }
+      catch (e) { failure(e, home); }
+    },
+  });
+}
+
+function cardWaiting({ readyAt }) {
+  render(`<h1>New card on its way</h1>
+    <div class="banner warn">We alerted you on every channel. If you did not ask for a new card, cancel from any of them.</div>
+    <div class="countdown" id="cd">—</div>
+    <p class="muted" style="text-align:center">48 hours in production · shortened for this demo <span class="demo">DEMO</span></p>
+    ${nfcVisual('When the wait ends, tap your new card')}
+    <label>New card PIN<input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="6 digits" autocomplete="off"></label>
+    <p class="small" id="pinerr" role="alert" style="color:var(--red)"></p>
+    <div class="spacer"></div>
+    <button class="primary" id="activate" disabled>Tap new card & activate</button>`);
+  bindCardClick('#activate');
+  const tick = () => {
+    const left = Math.max(0, Math.ceil((readyAt - Date.now()) / 1000));
+    if (!$('#cd')) return;
+    $('#cd').textContent = left ? `${left}s` : 'Ready';
+    $('#activate').disabled = left > 0;
+    if (left) setTimeout(tick, 500);
+  };
+  tick();
+  $('#pin').oninput = () => { $('#pinerr').textContent = ''; };
+  $('#activate').onclick = async () => {
+    if (!/^\d{6,8}$/.test($('#pin').value)) { $('#pinerr').textContent = 'Enter a PIN of 6 to 8 digits.'; return; }
+    const pin = $('#pin').value;
+    await playTap();
+    busy('Activating', 'Your phone and Swissquote re-share the key onto the new card. Old shares are deleted.');
+    try {
+      const r = await call('/api/card/replace/complete', { pin });
+      render(`<div class="stack center" style="margin-top:40px"><div class="icon ok" aria-hidden="true">✓</div>
+        <h1>New card active</h1><p class="muted">Same address, same balance. The lost card no longer works.</p>
+        <p class="addr">${esc(r.address)}</p></div>
+        <div class="spacer"></div><button class="primary" id="back">Done</button>`);
+      $('#back').onclick = home;
+    } catch (e) { failure(e, home); }
+  };
+}
+
+// ---------- Escape: phone + card, no Swissquote ----------
+function escapeForm() {
+  render(`<h1>Move funds without Swissquote</h1>
+    <p class="muted">If Swissquote is ever unavailable, use the independent open-source Exit Tool on a computer. It combines your phone's exported key share with your recovery card and never contacts Swissquote.</p>
+    <a class="primary" style="text-align:center;padding:14px;border-radius:12px;background:var(--red);color:#fff;text-decoration:none;font-weight:600" href="http://localhost:5100" target="_blank" rel="noopener">Open the Exit Tool</a>
+    <div class="spacer"></div><button class="ghost" id="cancel">Back</button>`);
+  $('#cancel').onclick = home;
+}
+
+// ---------- Recovery on a new phone ----------
+function recoverStart() {
+  render(`<div class="steps" aria-hidden="true"><span class="on"></span><span></span><span></span></div>
+    <h1>Recover your wallet</h1>
+    <p class="muted">You will need your recovery card and a short video call with Swissquote. For your protection, recovery includes a waiting period with alerts on every channel.</p>
+    ${S.hasCard ? nfcVisual('Hold your recovery card against the phone') : '<div class="banner err">No recovery card detected.</div>'}
+    <div class="spacer"></div>
+    <button class="primary" id="tap" ${S.hasCard ? '' : 'disabled'}>Tap recovery card</button>
+    <button class="secondary" id="fromBackup" ${S.hasBackup ? '' : 'disabled'}>I lost my card too · Restore from my Apple/Google account</button>
+    <button class="ghost" id="cancel">Cancel</button>`);
+  bindCardClick('#tap');
+  $('#cancel').onclick = welcome;
+  $('#tap').onclick = async () => { await playTap(); videoId('card'); };
+  $('#fromBackup').onclick = () => videoId('backup');
+}
+
+function videoId(method) {
+  videoIdentification({
+    title: 'Video identification',
+    text: 'To recover your wallet, a Swissquote agent verifies your identity by video.',
+    back: welcome,
+    after: async identity => {
+      busy('Verifying', 'Recording the result with Swissquote.');
+      try { const r = await call('/api/recovery/start', { identity, method }); waiting(r, method); }
+      catch (e) { failure(e, welcome); }
+    },
+  });
+}
+
+function waiting({ oldAddress, readyAt }, method) {
+  const accountNote = method === 'backup'
+    ? `<div class="card"><span class="small">Signed in to your Apple/Google account: your passkey is available on this phone.</span><span class="demo">DEMO · SIMULATED ACCOUNT SIGN-IN</span></div>`
+    : '';
+  render(`<div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="on"></span></div>
+    <h1>Waiting period</h1>
+    <div class="banner warn">We alerted you by app, email, SMS, web and phone. If this was not you, cancel from any of them.</div>
+    <div class="countdown" id="cd">—</div>
+    <p class="muted center" style="text-align:center">${method === 'backup' ? '7 days without your card' : '48 hours with your card'} in production · shortened for this demo <span class="demo">DEMO</span></p>
+    <p class="small muted">Recovering <span class="addr">${esc(oldAddress)}</span></p>
+    ${accountNote}
+    ${nfcVisual('When the wait ends, tap your new card')}
+    <label>PIN for your new recovery card<input id="newpin" type="password" inputmode="numeric" maxlength="8" placeholder="6 digits" autocomplete="off"></label>
+    <p class="small" id="nperr" role="alert" style="color:var(--red)"></p>
+    <div class="spacer"></div>
+    <button class="primary" id="finish" disabled>Restore my wallet</button>`);
+  const tick = () => {
+    const left = Math.max(0, Math.ceil((readyAt - Date.now()) / 1000));
+    if (!$('#cd')) return;
+    $('#cd').textContent = left ? `${left}s` : 'Ready';
+    $('#finish').disabled = left > 0;
+    if (left) setTimeout(tick, 500);
+  };
+  tick();
+  $('#newpin').oninput = () => { $('#nperr').textContent = ''; };
+  bindCardClick('#finish');
+  $('#finish').onclick = async () => {
+    const pin = $('#newpin').value;
+    if (!/^\d{6,8}$/.test(pin)) { $('#nperr').textContent = 'Choose a PIN of 6 to 8 digits for your new card.'; return; }
+    await playTap();
+    busy('Restoring', method === 'backup'
+      ? 'Your passkey proves itself to Swissquote, Swissquote releases its key, your backup opens, then all funds move to a new wallet.'
+      : 'Creating a new wallet with Swissquote, then moving all funds into it with your card.');
+    try {
+      const r = await call('/api/recovery/complete', { pin });
+      S = await call('/api/state');
+      done(r, 'Wallet restored', `<p class="small muted">Funds moved to your new wallet. The old phone can no longer move anything.</p><p class="addr">${esc(r.newAddress)}</p>`);
+    } catch (e) { failure(e, welcome); }
+  };
+}
+
+async function boot() {
+  S = await call('/api/state');
+  $('#net').textContent = `${S.network}${S.broadcast ? '' : ' · dry run'}`;
+  S.hasWallet ? home() : welcome();
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+node_modules/
+# Key shares and co-signer state (also ignored in core/.gitignore): never commit, even test ones.
+core/client/demo/
+core/client/data*/
+core/cosigner/data/
+# Not part of the public, English-only submission.
+chat/
+EMPIEZA-AQUI.md
+*.zip

@@ -1,0 +1,32 @@
+<section id="auth" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">4 · Authentication</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Small payments are easy. Large ones need the card.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Up to CHF 21 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#2F6690">Face ID</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Phone and Swissquote sign. Most everyday payments.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Above CHF 21 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#B8412E">Card tap + PIN</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">The card signs a one-time challenge bound to this exact transaction.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Above CHF 85 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#14202B">Refused</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Daily limit. Lowering is instant; raising needs the card.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Before every signature, in plain language: who receives what, who pays the fee, sanctions and limit checks, the balance after.</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">A thief with an unlocked phone cannot enrol their own card: card keys are registered only at creation, recovery or a verified replacement.</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">09</p>
+</div>
+<aside>Daily use is Face ID plus the co-signer session (passkeys in production; a token in the prototype). Swissquote enforces the tiers on its side, so a modified app cannot skip them. The card tap is a FIDO2-style signature with the key registered at wallet creation; the challenge is single-use and bound to the transaction id, so it cannot be replayed for another payment. Limits default to 25,000 and 100,000 sats in the demo; clients change them in Settings, and raising them needs the card.</aside>
+</section>

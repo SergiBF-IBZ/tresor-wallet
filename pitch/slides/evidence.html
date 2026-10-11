@@ -1,0 +1,29 @@
+<section id="evidence" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Proof</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Every step is a real transaction on Bitcoin signet</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1B2733">
+<tr><th style="width:34%">Step</th><th style="width:30%">Transaction</th><th style="width:36%">Signed by</th></tr>
+<tr><td>Payment</td><td>bedda5ed…5908</td><td>Phone + Swissquote</td></tr>
+<tr><td>Gasless payment</td><td>f70e0a95…959d</td><td>Phone + Swissquote · fee wallet</td></tr>
+<tr><td>Lost phone: recovery sweep</td><td>a63be18a…6155</td><td>Card + Swissquote</td></tr>
+<tr><td>Lost phone and card</td><td>9b970345…d6a9</td><td>Restored share + Swissquote</td></tr>
+<tr><td>Swissquote gone: Exit Tool</td><td>4419a6e8…dde7</td><td>Phone + card only</td></tr>
+</table>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600;color:#14202B">19 automated tests</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5563">Every share pair signs, one share cannot; BIP-322 official vectors; policy; backup.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600;color:#14202B">No homemade crypto</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5563">DKLs23 (Silence Laboratories), bitcoinjs-lib, noble curves and hashes, Node crypto.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">16</p>
+</div>
+<aside>Use this slide as the safety net if the live demo hits the network: every flow already ran on signet and the links are in the README (blockstream.info/signet/tx/...). The co-signer and the phones ran as separate processes. The tests run in about five seconds with npm test; they include the claim the judges care most about, that one share alone cannot sign, and that an old card share stops working after a re-share.</aside>
+</section>

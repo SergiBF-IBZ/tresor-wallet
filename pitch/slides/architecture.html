@@ -1,0 +1,51 @@
+<section id="architecture" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">2 · Architecture</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Separate processes, separate storage</h2>
+<div style="position:absolute;left:128px;top:310px;width:440px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Phone app</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 1 behind Face ID</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Wallet UI, plain-language review</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<div style="position:absolute;left:728px;top:310px;width:480px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #B8412E;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Swissquote co-signer</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 2 in its own storage</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Policy, card approvals, fee wallet, Travel Rule records</p>
+<p style="font-size:24px;line-height:1.35;color:#B8412E">Real · video ID and sanctions list mocked</p>
+</div>
+<div style="position:absolute;left:1368px;top:310px;width:424px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Bitcoin signet</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Real transactions</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Blockstream, with mempool.space as fallback</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<div style="position:absolute;left:128px;top:660px;width:320px;height:180px;display:flex;flex-direction:column;gap:8px;background:#F5F3EE;border:3px dashed #6B7684;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Recovery card</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 3 · PIN</p>
+<p style="font-size:24px;line-height:1.35;color:#6B7684">Mock: a folder</p>
+</div>
+<div style="position:absolute;left:728px;top:660px;width:480px;height:180px;display:flex;flex-direction:column;gap:8px;background:#F5F3EE;border:3px dashed #6B7684;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Client's cloud backup</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 1 sealed: passkey + Swissquote key</p>
+<p style="font-size:24px;line-height:1.35;color:#6B7684">Mock: folders</p>
+</div>
+<div style="position:absolute;left:1368px;top:660px;width:424px;height:180px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Exit Tool</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Phone + card shares, no server</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<x-connector x1="568" y1="450" x2="728" y2="450" head="both" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:568px;top:398px;width:160px;font-size:24px;text-align:center;color:#14202B">MPC</p>
+<x-connector x1="1208" y1="450" x2="1368" y2="450" head="end" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:1208px;top:398px;width:160px;font-size:24px;text-align:center;color:#14202B">broadcast</p>
+<x-connector x1="288" y1="590" x2="288" y2="660" head="both" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:304px;top:604px;width:100px;font-size:24px;color:#14202B">NFC</p>
+<x-connector x1="520" y1="590" x2="728" y2="740" route="vh" head="end" style="color:#14202B;border-width:3px;border-style:dashed"></x-connector>
+<x-connector x1="1580" y1="660" x2="1580" y2="590" head="end" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:128px;top:868px;width:1664px;font-size:24px;color:#4A5563">Solid border: real. Dashed border: mocked, and labelled DEMO in the app. The client app never holds Share 2.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">07</p>
+</div>
+<aside>Every box is its own process with its own storage, as the challenge requires: the co-signer runs separately, and the phone app never sees Share 2, it only exchanges MPC protocol messages. The co-signer rebuilds what it signs from the transaction itself, so it never signs a hash it did not check. Real: MPC, the co-signer and its policy, fee sponsoring, BIP-322 proofs, the encrypted backup, the Exit Tool, the signet transactions. Mocked and labelled: the card hardware, Face ID, video identification, the Apple/Google account, the sanctions provider.</aside>
+</section>

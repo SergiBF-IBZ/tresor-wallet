@@ -1,0 +1,21 @@
+{
+  "name": "swissquote-wallet-core",
+  "version": "1.0.0",
+  "scripts": {
+    "demo": "node scripts/demo.mjs",
+    "demo:reset": "node scripts/reset-demo.mjs",
+    "cosigner": "node cosigner/server.mjs",
+    "demo:wipe": "node scripts/wipe-phone.mjs",
+    "test": "node --test test/"
+  },
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@noble/curves": "^2.4.0",
+    "@noble/hashes": "^2.4.0",
+    "@silencelaboratories/dkls-wasm-ll-node": "^1.2.0",
+    "bitcoinjs-lib": "^7.0.2"
+  },
+  "description": "Swissquote self-custody wallet: 2-of-3 MPC co-signer, phone app and recovery (hackathon prototype)"
+}

@@ -1,0 +1,36 @@
+<section id="creation" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">3 · Wallet creation and identity</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Born split, and proven to be the client's</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">1</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">The KYC-verified client taps Create my wallet in the Swissquote app.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">2</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Distributed key generation, 4 rounds: Share 2 is born on Swissquote's server and never leaves it.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">3</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Share 1 stays on the phone, Share 3 goes to the card. The card's public key is registered.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#B8412E;border-radius:10px;padding:4px 16px">4</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">The wallet signs an ownership message (BIP-322). Swissquote verifies it and records the owner.</p>
+</div>
+</div>
+<div style="width:700px;display:flex;flex-direction:column;gap:20px;background:#14202B;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#E8826E">Travel Rule record</p>
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;color:#E6EAEE">Swissquote self-custody wallet ownership proof<br>Client: SQ-170B1525<br>Address: tb1qjgct…cpmlue8h<br>Date: 2026-10-10T19:43:36Z<br>Nonce: d74f410a12d72a5f</p>
+<p style="font-size:24px;line-height:1.45;color:#AFC0CD">Signed by phone + Swissquote with MPC. Matches the official BIP-322 test vectors. No funds move, no fee.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">08</p>
+</div>
+<aside>Where keys are generated: in pieces, on two machines. The phone runs the phone and card parties; Swissquote runs its own party on its server, so its share never exists anywhere else. Identity link: the wallet is created inside the logged-in Swissquote session, and then signs a BIP-322 ownership message. Swissquote writes the message and computes what is signed itself, so this route can never be abused to sign a payment. Because Swissquote cannot sign alone, a valid signature proves the client took part. After a recovery, the new wallet proves ownership again automatically.</aside>
+</section>

@@ -1,0 +1,22 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-10-10T22:45:00Z" },
+  "lists": "css",
+  "title": "Swissquote Wallet Pitch",
+  "cover": "cover",
+  "order": ["cover", "problem", "answer", "demo", "models", "threats", "architecture", "creation", "auth", "recovery", "exit", "gasless", "compliance", "legal", "business", "evidence", "limits", "close", "app"],
+  "sections": {
+    "story": { "description": "The problem, our answer and the live demo", "start": "cover" },
+    "design": { "description": "Custody model, threat model, architecture, creation, authentication and recovery", "start": "models" },
+    "bonus": { "description": "Gasless payments and compliant interaction", "start": "gasless" },
+    "case": { "description": "Legal feasibility and business case", "start": "legal" },
+    "proof": { "description": "On-chain evidence, honest limits and the close", "start": "evidence" },
+    "appendix": { "description": "Screenshots of the app for questions", "start": "app" }
+  },
+  "faces": {
+    "source-serif-4": { "family": "Source Serif 4", "href": "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&display=swap" },
+    "ibm-plex-sans": { "family": "IBM Plex Sans", "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" },
+    "ibm-plex-mono": { "family": "IBM Plex Mono", "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" }
+  },
+  "designSystems": []
+}

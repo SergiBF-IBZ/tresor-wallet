@@ -1,0 +1,33 @@
+<section id="compliance" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Bonus · Compliant interaction</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Shown before Face ID, enforced by Swissquote</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="width:860px;display:flex;flex-direction:column;gap:18px;background:#14202B;border-radius:20px;padding:36px">
+<p style="font-size:26px;font-weight:600;color:#F5F3EE">Checked before you sign</p>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Check" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Recipient screened: not on sanctions lists</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Verified" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Verified by Swissquote: your Swissquote account</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Warning" style="color:#F0B357;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#F0B357">First payment to this address: check it carefully</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Check" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Within your limits: CHF 9.35 of CHF 85 spent today</p></div>
+<hr style="border-top:1px solid #3A4B5B">
+<p style="font-size:26px;font-weight:600;color:#F5F3EE">What will happen</p>
+<p style="font-size:24px;line-height:1.45;color:#D7E0E6">Ana Keller receives CHF 2.00. Your balance goes from CHF 42.88 to CHF 40.88. The network fee is paid by Swissquote.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Enforced again when co-signing</h3>
+<ul style="font-size:26px;line-height:1.4;color:#1B2733">
+<li>Sanctioned recipient: refused</li>
+<li>Over the daily limit: refused</li>
+<li>Above the card threshold: refused without a card tap</li>
+<li>Frozen wallet: refused</li>
+</ul>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Next, for DeFi: an approved-dApp list. The co-signer decodes each contract call and co-signs only approved contracts and methods.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">13</p>
+</div>
+<aside>The client never signs blind. The review screen is a plain-language simulation: who gets what, the balance after, who pays the fee. Swissquote's screening runs before Face ID and is shown: sanctions, verified counterparties such as the client's own Swissquote account, a warning on a first payment to a new address (the classic address-swap scam), and the limits. Then the same rules are enforced again on Swissquote's side when co-signing, so a tampered app gains nothing. In the demo we show the sanctioned entity flagged, then refused. What is still design: the approved-dApp list for EVM DeFi.</aside>
+</section>

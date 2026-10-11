@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self-Custody Exit Tool</title>
+<style>
+/* Independent open-source tool: deliberately not Swissquote-branded. Sober desktop layout. */
+:root {
+  --bg: #eef1f4; --panel: #ffffff; --ink: #14202b; --muted: #5d6b78; --line: #d6dde4;
+  --accent: #1f5fbf; --accent-soft: #e5eefb; --ok: #157a52; --ok-soft: #e2f3ea; --bad: #b42318; --bad-soft: #fde8e6; --warn: #8a5a00; --warn-soft: #fbf0d9;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f1419; --panel: #161d24; --ink: #e6edf3; --muted: #93a1ad; --line: #2a343e;
+    --accent: #6ea8ff; --accent-soft: #1a2a40; --ok: #4fd1a1; --ok-soft: #13302a; --bad: #ff7b72; --bad-soft: #3a1c1c; --warn: #f0b357; --warn-soft: #33281a; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 780px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: flex; flex-direction: column; gap: 16px; }
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+h1 .tag { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.lede { color: var(--muted); margin: 4px 0 0; max-width: 60ch; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); white-space: nowrap; }
+.badge.ok { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
+.badge.demo { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; grid-template-columns: 34px 1fr; gap: 6px 12px; }
+.step.locked { opacity: .5; pointer-events: none; }
+.num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 13px; background: var(--accent-soft); color: var(--accent); }
+.step.done .num { background: var(--ok-soft); color: var(--ok); }
+.step h2 { font-size: 16px; margin: 3px 0 0; }
+.body { grid-column: 2; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.mono { font-family: var(--mono); font-size: 13px; word-break: break-all; }
+.sources { display: grid; gap: 8px; }
+.source { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.source:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.source input { margin-top: 4px; }
+.source.disabled { opacity: .5; cursor: default; }
+label.field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+input[type=text], input[type=password] { font: inherit; font-family: var(--mono); font-size: 14px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); width: 100%; }
+button { font: inherit; font-weight: 600; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 7px; padding: 9px 14px; cursor: pointer; align-self: flex-start; }
+button.ghost { background: transparent; color: var(--accent); }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.msg { font-size: 13px; padding: 8px 10px; border-radius: 7px; }
+.msg.ok { background: var(--ok-soft); color: var(--ok); }
+.msg.bad { background: var(--bad-soft); color: var(--bad); }
+.msg:empty { display: none; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+td { padding: 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:first-child { color: var(--muted); width: 38%; padding-right: 12px; }
+tr:last-child td { border-bottom: 0; font-weight: 700; }
+.chipcard { width: 88px; height: 56px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); position: relative; flex: none; transition: transform .6s, border-color .3s; }
+.chipcard::before { content: ""; position: absolute; left: 10px; top: 18px; width: 18px; height: 14px; border-radius: 3px; background: #d9b65c; }
+.chipcard::after { content: ")))"; position: absolute; right: 8px; top: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.chipcard.read { border-color: var(--ok); transform: translateX(6px); }
+.cardrow { display: flex; gap: 14px; align-items: center; }
+footer { color: var(--muted); font-size: 12px; font-family: var(--mono); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 12px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div>
+      <h1>Self-Custody Exit Tool <span class="tag" id="ver">v0.1.0</span></h1>
+      <p class="lede">Move all funds from your 2-of-3 wallet using your phone's key share and your recovery card. For when your wallet provider is unavailable or no longer exists.</p>
+    </div>
+    <div class="badges">
+      <span class="badge ok">● No provider server contacted</span>
+      <span class="badge">Signs on this computer</span>
+      <span class="badge" id="net">signet</span>
+      <span class="badge demo">DEMO · simulated export and card</span>
+    </div>
+  </header>
+
+  <section class="step" id="s1">
+    <span class="num">1</span><h2>Import your phone's key share</h2>
+    <div class="body">
+      <p class="muted small">Open your wallet app on the phone, choose "Export for escape" and load the file here. In this demo, pick the phone whose export to use.</p>
+      <div class="sources" id="sources"></div>
+      <p class="msg" id="m1"></p>
+    </div>
+  </section>
+
+  <section class="step locked" id="s2">
+    <span class="num">2</span><h2>Unlock your recovery card</h2>
+    <div class="body">
+      <div class="cardrow"><div class="chipcard" id="chip" aria-hidden="true"></div>
+        <p class="muted small" style="margin:0">Hold the card on the reader or the phone (NFC) and enter its PIN. The card only releases its key share after the PIN check.</p></div>
+      <label class="field">Card PIN<input type="password" id="pin" inputmode="numeric" maxlength="8" autocomplete="off"></label>
+      <p class="msg" id="m2"></p>
+    </div>
+  </section>
+
+  <section class="step locked" id="s3">
+    <span class="num">3</span><h2>Destination</h2>
+    <div class="body">
+      <label class="field">Bitcoin address that will receive all funds<input type="text" id="to" placeholder="tb1q…" autocomplete="off" spellcheck="false"></label>
+      <button id="previewBtn">Prepare transaction</button>
+      <p class="msg" id="m3"></p>
+    </div>
+  </section>
+
+  <section class="step locked" id="s4">
+    <span class="num">4</span><h2>Review and sign</h2>
+    <div class="body">
+      <table id="review"></table>
+      <button id="signBtn">Sign locally and broadcast</button>
+      <p class="msg" id="m4" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <footer>
+    <span id="lic">Open source · MIT</span>
+    <span id="exp">Broadcast via public explorer</span>
+  </footer>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sats = n => `${Number(n).toLocaleString('de-CH')} sats`;
+let source = null;
+
+async function call(path, body) {
+  const res = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const json = await res.json();
+  if (!res.ok) throw Object.assign(new Error(json.error), { code: json.code });
+  return json;
+}
+const unlock = id => $(id).classList.remove('locked');
+const lock = id => $(id).classList.add('locked');
+const msg = (id, text, kind = 'bad') => { $(id).className = `msg ${kind}`; $(id).textContent = text; };
+
+async function init() {
+  const info = await call('/api/info');
+  $('#net').textContent = `${info.network}${info.broadcast ? '' : ' · dry run'}`;
+  $('#ver').textContent = `v${info.version}`;
+  $('#lic').textContent = `Open source · ${info.license}`;
+  $('#exp').textContent = `Broadcast via ${info.explorer}`;
+  const list = await call('/api/sources');
+  $('#sources').innerHTML = list.map(s => `<label class="source ${s.address ? '' : 'disabled'}">
+      <input type="radio" name="src" value="${s.id}" ${s.address ? '' : 'disabled'}>
+      <span><b>${esc(s.label)}</b><br><span class="mono">${s.address ? esc(s.address) : 'no wallet on this phone'}</span><br><span class="small muted" id="bal-${s.id}"></span></span></label>`).join('');
+  document.querySelectorAll('input[name=src]').forEach(r => r.onchange = async () => {
+    source = r.value;
+    ['#s3', '#s4'].forEach(lock);
+    $('#m1').textContent = '';
+    try {
+      const b = await call('/api/balance', { source });
+      $(`#bal-${source}`).textContent = `Balance: ${sats(b.sats)}${b.pending ? ` (${sats(b.pending)} pending)` : ''}`;
+      if (!b.sats) return msg('#m1', 'This wallet holds no funds.');
+      msg('#m1', 'Key share imported. Phone share loaded on this computer.', 'ok');
+      unlock('#s2'); unlock('#s3'); $('#s1').classList.add('done');
+    } catch (e) { msg('#m1', e.message); }
+  });
+}
+
+$('#pin').oninput = () => { $('#m2').textContent = ''; $('#chip').classList.remove('read'); };
+$('#to').oninput = () => { $('#m3').textContent = ''; lock('#s4'); };
+
+$('#previewBtn').onclick = async () => {
+  const to = $('#to').value.trim();
+  if (!to) return msg('#m3', 'Enter the destination address.');
+  $('#previewBtn').disabled = true;
+  try {
+    const p = await call('/api/preview', { source, to });
+    $('#review').innerHTML = `<tr><td>From</td><td class="mono">${esc(p.from)}</td></tr>
+      <tr><td>To</td><td class="mono">${esc(p.to)}</td></tr>
+      <tr><td>Network fee</td><td>${sats(p.fee)} (${p.feeRate} sat/vB)</td></tr>
+      <tr><td>Recipient receives</td><td>${sats(p.amount)} · everything</td></tr>`;
+    $('#m3').textContent = '';
+    unlock('#s4');
+  } catch (e) { msg('#m3', e.message); }
+  $('#previewBtn').disabled = false;
+};
+
+$('#signBtn').onclick = async () => {
+  const pin = $('#pin').value;
+  if (!pin) { msg('#m2', 'Enter the card PIN in step 2.'); return; }
+  $('#signBtn').disabled = true;
+  msg('#m4', 'Reading the card and signing on this computer…', 'ok');
+  try {
+    const r = await call('/api/sweep', { source, to: $('#to').value.trim(), pin });
+    $('#chip').classList.add('read');
+    $('#s2').classList.add('done'); $('#s4').classList.add('done');
+    $('#m4').className = 'msg ok';
+    $('#m4').innerHTML = `${r.broadcast ? 'Broadcast' : 'Signed (dry run, not broadcast)'}: ${sats(r.amount)} sent. Signed by the phone share and the card share only; no provider server was contacted.<br><a class="mono" href="${r.url}" target="_blank" rel="noopener">${esc(r.txid)}</a>`;
+  } catch (e) {
+    if (['WRONG_PIN', 'CARD_BLOCKED', 'BAD_PIN'].includes(e.code)) { msg('#m2', e.message); $('#m4').textContent = ''; }
+    else msg('#m4', e.message);
+    $('#signBtn').disabled = false;
+  }
+};
+
+init();
+</script>
+</body>
+</html>

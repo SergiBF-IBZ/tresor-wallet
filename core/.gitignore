@@ -1,0 +1,5 @@
+node_modules/
+# Key shares and co-signer state: never commit, even test ones.
+client/data*/
+client/demo/
+cosigner/data/

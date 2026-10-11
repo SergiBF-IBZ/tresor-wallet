@@ -1,0 +1,49 @@
+<section id="gasless" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Bonus · Gasless transactions</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Swissquote pays the network fee</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="width:820px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4A5563">Inputs</p>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #2F6690;border-radius:12px;padding:20px">
+<p style="font-size:26px;font-weight:600;color:#14202B">Client coins</p>
+<p style="font-size:26px;color:#4A5563">53,449 sats</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #B8412E;border-radius:12px;padding:20px">
+<p style="font-size:26px;font-weight:600;color:#14202B">Swissquote fee coin</p>
+<p style="font-size:26px;color:#4A5563">12,000 sats</p>
+</div>
+</div>
+<x-shape kind="arrow-right" style="width:64px;height:32px;background:#14202B"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4A5563">Outputs</p>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #2F6690;border-radius:12px;padding:20px">
+<p style="font-size:26px;color:#14202B">Ana: 3,000</p>
+<p style="font-size:26px;color:#14202B">Client change: 50,449</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #B8412E;border-radius:12px;padding:20px">
+<p style="font-size:26px;color:#14202B">Swissquote change: 11,520</p>
+<p style="font-size:26px;font-weight:600;color:#B8412E">Fee 480: paid by Swissquote</p>
+</div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">How abuse is prevented</h3>
+<ul style="font-size:26px;line-height:1.4;color:#1B2733">
+<li>Only clients with a verified ownership proof</li>
+<li>Swissquote signs its coin last, only for a payment it already co-signed</li>
+<li>At most 1,000 sats a payment; 10 payments and 5,000 sats a day</li>
+<li>Fee rate capped; each fee coin is signed once</li>
+<li>Quota used up: the client pays the fee as usual</li>
+</ul>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">On signet: f70e0a95…00d0959d. The client sent exactly 3,000 sats and paid nothing. On EVM, the same MPC key owns an ERC-4337 account with a Swissquote paymaster for USDC (design).</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">12</p>
+</div>
+<aside>The challenge allows "the equivalent on your chain". On Bitcoin the client's fee comes out of their own coins; we remove that. Swissquote's fee wallet, its own money, adds one coin to the client's payment and that coin pays the whole fee. Who pays: Swissquote, covered by the premium tier and trading revenue. How abuse is prevented: only verified clients, Swissquote signs last and only for a payment it already approved under the normal policy, hard caps per payment and per day, and each coin is used once. Swissquote's signature only commits its own coin, so it can never lose more than the capped fee. Live transaction on screen.</aside>
+</section>

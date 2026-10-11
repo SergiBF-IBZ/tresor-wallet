@@ -1,0 +1,29 @@
+<section id="exit" data-transition="fade" style="background:#14202B;color:#F5F3EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#E8826E">5 · If Swissquote disappears</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#F5F3EE">The funds were never at Swissquote</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">1 · Export</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The app exports Share 1 offline, behind Face ID. No server needed.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">2 · Card + PIN</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The recovery card releases Share 3 after its PIN check.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">3 · Sign and send</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The independent Exit Tool signs locally and broadcasts via a public explorer.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:28px;line-height:1.4;color:#F5F3EE">Open source, not Swissquote-branded, never contacts the co-signer. A Swissquote freeze cannot stop it, which is exactly what makes the wallet non-custodial.</p>
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;color:#E8826E">Tested with real funds on signet: 4419a6e8…1900e2dde7 · signed by phone + card only</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#8FA1B0">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#8FA1B0">11</p>
+</div>
+<aside>The challenge asks how the client gets their money back if Swissquote is permanently gone. Answer: the coins are on the blockchain, not at Swissquote; only the app and servers disappear. Phone plus card are two shares, enough to sign without anyone. We built the Exit Tool as a separate program with its own look, and it has no way to reach the co-signer. We ran it with real funds. Honest note: in production the export must be possible before the app disappears from the stores, so it is designed from day one and works offline.</aside>
+</section>

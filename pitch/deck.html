@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swissquote Wallet Pitch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+html, body { margin: 0; height: 100%; background: #0b1218; overflow: hidden; }
+#stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; }
+section { position: absolute; inset: 0; width: 1920px; height: 1080px; box-sizing: border-box; overflow: hidden; }
+section:not(.on) { display: none !important; }
+section *, section *::before, section *::after { box-sizing: border-box; margin: 0; }
+section div { min-width: 0; }
+section ul { padding-left: 1.2em; display: flex; flex-direction: column; gap: 0.35em; }
+section table { border-collapse: collapse; width: 100%; }
+section th, section td { padding: 0.35em 0.6em; border-bottom: 1px solid #cfc9bd; text-align: left; vertical-align: top; }
+section th { font-weight: 600; border-bottom: 2px solid #8f877a; }
+section aside { display: none; }
+section hr { border: 0; width: 100%; }
+x-shape { display: block; flex: none; }
+x-shape[kind="arrow-right"] { clip-path: polygon(0 32%, 58% 32%, 58% 0, 100% 50%, 58% 100%, 58% 68%, 0 68%); }
+x-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; border: 3px solid currentColor; border-radius: 50%; font: 700 20px/1 Arial, sans-serif; }
+x-icon[name="Check"]::before, x-icon[name="Verified"]::before { content: "\2713"; }
+x-icon[name="Warning"]::before { content: "!"; }
+x-icon[name="Key"]::before { content: "1"; }
+x-icon[name="Trust"]::before { content: "2"; }
+x-icon[name="Lock"]::before { content: "3"; }
+svg.wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+#notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 40%; overflow: auto; background: rgba(11,18,24,.94); color: #e6eaee; font: 18px/1.5 Arial, sans-serif; padding: 16px 24px; display: none; }
+#count { position: fixed; right: 12px; top: 8px; color: #8fa1b0; font: 13px Arial, sans-serif; }
+</style></head>
+<body>
+<div id="stage">
+<section id="cover" data-transition="fade" style="background:#14202B;color:#F5F3EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:44px">
+<div style="position:absolute;left:0;top:0;width:24px;height:1080px;background:#D2533E"></div>
+<p style="font-size:28px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:#E8826E">Swissquote Wallet Challenge · EPFL Hackathon 2026</p>
+<h1 style="font-family:'Source Serif 4', Georgia, serif;font-size:120px;font-weight:600;line-height:1.05;color:#F5F3EE">Your keys.<br>A Swiss safety net.</h1>
+<p style="font-size:36px;line-height:1.45;color:#C9D2DA;width:1320px">A self-custody wallet Swissquote could launch tomorrow. The client holds the keys, Swissquote can block a payment but never move the funds, and the wallet stays one tap from the Swissquote account.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#8FA1B0">Team Two of Three · Sergi Boned &amp; Arnau Ferrer</p>
+<p style="font-size:24px;color:#8FA1B0">Working prototype on Bitcoin signet · real transactions</p>
+</div>
+<aside>Open with the client, not the tech. "Swissquote clients who want to hold their own crypto have to leave today. We built the wallet that lets them hold their own keys without leaving, and without the risk of losing everything." Then go straight to the problem slide.</aside>
+</section>
+
+<section id="problem" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">The problem</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Clients who want self-custody leave Swissquote today</h2>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:40px">
+<h3 style="font-size:36px;font-weight:600;color:#14202B">1 · Buy</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">The client buys bitcoin at Swissquote.</p>
+</div>
+<x-shape kind="arrow-right" style="width:72px;height:36px;background:#B8412E"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:40px">
+<h3 style="font-size:36px;font-weight:600;color:#14202B">2 · Withdraw</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">To an external wallet the bank cannot verify.</p>
+</div>
+<x-shape kind="arrow-right" style="width:72px;height:36px;background:#B8412E"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:40px">
+<h3 style="font-size:36px;font-weight:600;color:#14202B">3 · Gone</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">Assets, trading and the relationship leave.</p>
+</div>
+</div>
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:44px;line-height:1.3;color:#14202B;width:1500px">And the client carries the risk alone: a lost seed phrase is a lost fortune, and a stolen one is worse.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">02</p>
+</div>
+<aside>Today a Swissquote client who wants "not your keys, not your coins" has one option: withdraw to an external wallet. Swissquote loses the assets and the trading, and under FINMA's Travel Rule it cannot even verify who owns that wallet. The client gets 24 words to protect alone. We want a third option: self-custody that stays one step from the account.</aside>
+</section>
+
+<section id="answer" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Our answer</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">One key, split in three. Any two sign.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #2F6690;border-radius:16px;padding:40px">
+<x-icon name="Key" style="color:#2F6690;width:56px;height:56px"></x-icon>
+<h3 style="font-size:36px;font-weight:600;color:#14202B">Share 1 · Your phone</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">Behind Face ID. Signs everyday payments together with Swissquote.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #B8412E;border-radius:16px;padding:40px">
+<x-icon name="Trust" style="color:#B8412E;width:56px;height:56px"></x-icon>
+<h3 style="font-size:36px;font-weight:600;color:#14202B">Share 2 · Swissquote</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">An isolated co-signer. Screens sanctions and limits. Can block, never move.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #2F6690;border-radius:16px;padding:40px">
+<x-icon name="Lock" style="color:#2F6690;width:56px;height:56px"></x-icon>
+<h3 style="font-size:36px;font-weight:600;color:#14202B">Share 3 · Recovery card</h3>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">NFC card with a PIN, kept at home. For large payments, recovery and the exit.</p>
+</div>
+</div>
+<p style="font-size:34px;font-weight:600;line-height:1.35;color:#14202B">The full key never exists anywhere. No seed words to lose. Swissquote pays the network fees.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">03</p>
+</div>
+<aside>MPC threshold signatures, DKLs23, an established open-source library: no homemade crypto. The key is generated in pieces and never put together, not even to sign. Phone plus Swissquote is daily use. Card plus Swissquote is recovery. Phone plus card is the exit if Swissquote is gone. Swissquote alone holds one share: it can refuse to sign, it can never sign alone. Same key works for Bitcoin and EVM chains.</aside>
+</section>
+
+<section id="demo" data-transition="fade" style="background:#E9E5DC;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Live demo · 2 minutes</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Create, pay, lose the phone, get the money back</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px 48px">
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">1</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Phone A: balance, and ownership verified by Swissquote (BIP-322)</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">4</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Phone B: an impostor tries to recover. Refused at video ID</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">2</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Send CHF 10 to Ana: fee paid by Swissquote, checks shown, Face ID</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">5</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Real client: card, video ID, wait. New wallet, funds swept</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">3</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Pay the sanctioned test entity: flagged, then refused by Swissquote</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<p style="font-size:28px;font-weight:700;color:#F5F3EE;background:#14202B;border-radius:12px;padding:8px 20px">6</p>
+<p style="font-size:30px;line-height:1.35;color:#1B2733">Exit Tool: funds leave with phone and card, no Swissquote server</p>
+</div>
+</div>
+<p style="font-size:26px;color:#4A5563">Everything simulated (card, Face ID, video call, Apple/Google account, sanctions list) is labelled DEMO on screen.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#5E6875">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#5E6875">04</p>
+</div>
+<aside>Switch to the browser. Tabs ready: localhost:5001 (phone A), 5002 (phone B), 5100 (Exit Tool). Card PIN 123456. 1) Point at "Ownership verified". 2) Send, contact Ana Keller, CHF 10, Review: show "Paid by Swissquote", the three checks and "What will happen", Confirm with Face ID. Card threshold is CHF 21, so CHF 10 needs no card. 3) Send to Sanctioned test entity: the review is red; confirm anyway to show the co-signer refusing it. 4) Phone B, I lost my phone, Impostor: refused. 5) Again, Real client: 20 s countdown, new card PIN, Restore. Phone A now says replaced. 6) Optional: Exit Tool. If the network fails, go to the evidence slide: every step is already on-chain.</aside>
+</section>
+
+<section id="models" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">1 · Custody model</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Why MPC 2-of-3, and not the alternatives</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1B2733">
+<tr><th style="width:21%">Model</th><th style="width:27%">Who can move the funds</th><th style="width:13%">Bitcoin</th><th style="width:14%">Client burden</th><th style="width:25%">Verdict</th></tr>
+<tr><td>Custodial account</td><td>Swissquote alone</td><td>Yes</td><td>None</td><td>Custody, not a wallet</td></tr>
+<tr><td>Seed phrase</td><td>Whoever holds 24 words</td><td>Yes</td><td>High</td><td>One leak, total loss</td></tr>
+<tr><td>ERC-4337 account</td><td>Passkey + on-chain rules</td><td>No</td><td>Low</td><td>EVM only, gas per chain</td></tr>
+<tr><td>Shamir split seed</td><td>2 of 3 holders; the seed is rebuilt to sign</td><td>Yes</td><td>Medium</td><td>Swissquote + a partner could restore it</td></tr>
+<tr style="background:#DCE8F1"><td><b>MPC 2-of-3 (ours)</b></td><td><b>Client + Swissquote, or the client alone</b></td><td><b>Yes, and EVM</b></td><td><b>Low</b></td><td><b>Chosen</b></td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#4A5563">DKLs23 threshold ECDSA (Silence Laboratories, open source). The key is generated in parts and never assembled, not even to sign.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">05</p>
+</div>
+<aside>We judged every model on one question first: who can move the money? Custodial means Swissquote can, which is bank custody and gives the client nothing new. A seed phrase puts everything on 24 words a typical client will photograph or lose. ERC-4337 is elegant but EVM-only, and Swissquote clients hold bitcoin. Shamir splits the seed but must rebuild it to sign, and Swissquote plus a partner could rebuild it without the client. MPC 2-of-3 gives multi-chain, no seed, and Swissquote can only ever block. The cost: a library licence and no on-chain timelocks with a single key, which is why the production design adds Taproot.</aside>
+</section>
+
+<section id="threats" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">1 · Threat model</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Swissquote can block, never move</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-left:8px solid #B8412E;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Can Swissquote move the funds alone?</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">No. It holds 1 of 3 shares, and one share cannot sign (automated test). Its fee wallet only adds Swissquote's own coins.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-left:8px solid #B8412E;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Swissquote together with a partner?</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">No partner holds a share. The optional cloud backup needs Apple/Google and Swissquote together: disclosed, and skippable.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-left:8px solid #2F6690;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Who could steal the funds?</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Someone with two of: the unlocked phone, the card and its PIN, Swissquote's co-signature (screened and limited).</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FBFAF7;border:1px solid #DAD6CC;border-left:8px solid #2F6690;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Who could lock the client out?</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Only losing phone and card with no backup. A Swissquote freeze never does: phone and card can always leave.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">06</p>
+</div>
+<aside>These are the challenge's four questions, answered directly. The key line for the legal discussion: Swissquote alone, or with any partner, cannot move funds. The one honest caveat is the optional backup: Apple or Google plus Swissquote together could open it, for example under a court order. That is the same exposure as any wallet on their phones, it is disclosed, and the client can skip it. Freezing is Swissquote's power; locking the client out is not, because phone plus card always works.</aside>
+</section>
+
+<section id="architecture" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">2 · Architecture</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Separate processes, separate storage</h2>
+<div style="position:absolute;left:128px;top:310px;width:440px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Phone app</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 1 behind Face ID</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Wallet UI, plain-language review</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<div style="position:absolute;left:728px;top:310px;width:480px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #B8412E;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Swissquote co-signer</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 2 in its own storage</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Policy, card approvals, fee wallet, Travel Rule records</p>
+<p style="font-size:24px;line-height:1.35;color:#B8412E">Real · video ID and sanctions list mocked</p>
+</div>
+<div style="position:absolute;left:1368px;top:310px;width:424px;height:280px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:24px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Bitcoin signet</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Real transactions</p>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Blockstream, with mempool.space as fallback</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<div style="position:absolute;left:128px;top:660px;width:320px;height:180px;display:flex;flex-direction:column;gap:8px;background:#F5F3EE;border:3px dashed #6B7684;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Recovery card</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 3 · PIN</p>
+<p style="font-size:24px;line-height:1.35;color:#6B7684">Mock: a folder</p>
+</div>
+<div style="position:absolute;left:728px;top:660px;width:480px;height:180px;display:flex;flex-direction:column;gap:8px;background:#F5F3EE;border:3px dashed #6B7684;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Client's cloud backup</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Share 1 sealed: passkey + Swissquote key</p>
+<p style="font-size:24px;line-height:1.35;color:#6B7684">Mock: folders</p>
+</div>
+<div style="position:absolute;left:1368px;top:660px;width:424px;height:180px;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:3px solid #2F6690;border-radius:16px;padding:20px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Exit Tool</h3>
+<p style="font-size:24px;line-height:1.35;color:#4A5563">Phone + card shares, no server</p>
+<p style="font-size:24px;line-height:1.35;color:#2F6690">Real</p>
+</div>
+<x-connector x1="568" y1="450" x2="728" y2="450" head="both" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:568px;top:398px;width:160px;font-size:24px;text-align:center;color:#14202B">MPC</p>
+<x-connector x1="1208" y1="450" x2="1368" y2="450" head="end" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:1208px;top:398px;width:160px;font-size:24px;text-align:center;color:#14202B">broadcast</p>
+<x-connector x1="288" y1="590" x2="288" y2="660" head="both" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:304px;top:604px;width:100px;font-size:24px;color:#14202B">NFC</p>
+<x-connector x1="520" y1="590" x2="728" y2="740" route="vh" head="end" style="color:#14202B;border-width:3px;border-style:dashed"></x-connector>
+<x-connector x1="1580" y1="660" x2="1580" y2="590" head="end" style="color:#14202B;border-width:3px"></x-connector>
+<p style="position:absolute;left:128px;top:868px;width:1664px;font-size:24px;color:#4A5563">Solid border: real. Dashed border: mocked, and labelled DEMO in the app. The client app never holds Share 2.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">07</p>
+</div>
+<aside>Every box is its own process with its own storage, as the challenge requires: the co-signer runs separately, and the phone app never sees Share 2, it only exchanges MPC protocol messages. The co-signer rebuilds what it signs from the transaction itself, so it never signs a hash it did not check. Real: MPC, the co-signer and its policy, fee sponsoring, BIP-322 proofs, the encrypted backup, the Exit Tool, the signet transactions. Mocked and labelled: the card hardware, Face ID, video identification, the Apple/Google account, the sanctions provider.</aside>
+</section>
+
+<section id="creation" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">3 · Wallet creation and identity</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Born split, and proven to be the client's</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">1</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">The KYC-verified client taps Create my wallet in the Swissquote app.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">2</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Distributed key generation, 4 rounds: Share 2 is born on Swissquote's server and never leaves it.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#2F6690;border-radius:10px;padding:4px 16px">3</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Share 1 stays on the phone, Share 3 goes to the card. The card's public key is registered.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start">
+<p style="font-size:26px;font-weight:700;color:#F5F3EE;background:#B8412E;border-radius:10px;padding:4px 16px">4</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">The wallet signs an ownership message (BIP-322). Swissquote verifies it and records the owner.</p>
+</div>
+</div>
+<div style="width:700px;display:flex;flex-direction:column;gap:20px;background:#14202B;border-radius:16px;padding:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#E8826E">Travel Rule record</p>
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.6;color:#E6EAEE">Swissquote self-custody wallet ownership proof<br>Client: SQ-170B1525<br>Address: tb1qjgct…cpmlue8h<br>Date: 2026-10-10T19:43:36Z<br>Nonce: d74f410a12d72a5f</p>
+<p style="font-size:24px;line-height:1.45;color:#AFC0CD">Signed by phone + Swissquote with MPC. Matches the official BIP-322 test vectors. No funds move, no fee.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">08</p>
+</div>
+<aside>Where keys are generated: in pieces, on two machines. The phone runs the phone and card parties; Swissquote runs its own party on its server, so its share never exists anywhere else. Identity link: the wallet is created inside the logged-in Swissquote session, and then signs a BIP-322 ownership message. Swissquote writes the message and computes what is signed itself, so this route can never be abused to sign a payment. Because Swissquote cannot sign alone, a valid signature proves the client took part. After a recovery, the new wallet proves ownership again automatically.</aside>
+</section>
+
+<section id="auth" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">4 · Authentication</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Small payments are easy. Large ones need the card.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Up to CHF 21 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#2F6690">Face ID</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Phone and Swissquote sign. Most everyday payments.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Above CHF 21 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#B8412E">Card tap + PIN</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">The card signs a one-time challenge bound to this exact transaction.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:16px;padding:36px">
+<p style="font-size:26px;color:#4A5563">Above CHF 85 a day</p>
+<h3 style="font-size:40px;font-weight:600;color:#14202B">Refused</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Daily limit. Lowering is instant; raising needs the card.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Before every signature, in plain language: who receives what, who pays the fee, sanctions and limit checks, the balance after.</p>
+<p style="font-size:28px;line-height:1.4;color:#1B2733">A thief with an unlocked phone cannot enrol their own card: card keys are registered only at creation, recovery or a verified replacement.</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">09</p>
+</div>
+<aside>Daily use is Face ID plus the co-signer session (passkeys in production; a token in the prototype). Swissquote enforces the tiers on its side, so a modified app cannot skip them. The card tap is a FIDO2-style signature with the key registered at wallet creation; the challenge is single-use and bound to the transaction id, so it cannot be replayed for another payment. Limits default to 25,000 and 100,000 sats in the demo; clients change them in Settings, and raising them needs the card.</aside>
+</section>
+
+<section id="recovery" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">5 · Recovery</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Every loss has a way back. No way back for thieves.</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1B2733">
+<tr><th style="width:19%">Situation</th><th style="width:28%">Who is involved</th><th style="width:12%">Wait</th><th style="width:41%">What stops an attacker</th></tr>
+<tr><td>Lost or stolen phone</td><td>Card + Swissquote, video ID</td><td>48 h</td><td>Needs card and PIN; the phone share is refused; funds move to a new wallet</td></tr>
+<tr><td>Lost card</td><td>Phone + Swissquote, video ID</td><td>48 h</td><td>Same address; the old card share stops working</td></tr>
+<tr><td>Lost phone and card</td><td>Apple/Google passkey + Swissquote key, video ID</td><td>7 days</td><td>Both locks needed; limited attempts; alerts on every channel</td></tr>
+<tr style="background:#F3DEDA"><td>Thief with phone and email</td><td>Nothing works</td><td>None</td><td>Refused at video ID; even with a deepfake, the sweep is refused</td></tr>
+<tr><td>Swissquote gone</td><td>Phone + card, Exit Tool</td><td>Minutes</td><td>No server needed; independent open-source tool</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Waits are 20 s and 40 s in the demo. Each one alerts the client by app, email, SMS, web and phone, so a fraudulent recovery can be cancelled.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">10</p>
+</div>
+<aside>The rule behind the table: if a share may be in someone else's hands, move the funds to a brand-new wallet; if a share was only lost, re-share the same key. A stolen phone means the thief keeps that share forever, so we sweep to a new wallet with new shares. A lost card is only lost, so phone and Swissquote re-share the same key onto a new card; the old card share no longer combines (we test that). Phone and card both lost: the Apple/Google backup, double-locked with Swissquote's key, with a 7-day wait because a thief with an unlocked phone may also hold the passkey. The bonus scenario, thief with phone and email, is refused twice: at video ID, and at the sweep, because in recovery Swissquote only pairs with the card. All of these ran on signet.</aside>
+</section>
+
+<section id="exit" data-transition="fade" style="background:#14202B;color:#F5F3EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#E8826E">5 · If Swissquote disappears</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#F5F3EE">The funds were never at Swissquote</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">1 · Export</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The app exports Share 1 offline, behind Face ID. No server needed.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">2 · Card + PIN</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The recovery card releases Share 3 after its PIN check.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1E2E3D;border-radius:16px;padding:36px">
+<h3 style="font-size:36px;font-weight:600;color:#F5F3EE">3 · Sign and send</h3>
+<p style="font-size:28px;line-height:1.4;color:#C9D2DA">The independent Exit Tool signs locally and broadcasts via a public explorer.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:28px;line-height:1.4;color:#F5F3EE">Open source, not Swissquote-branded, never contacts the co-signer. A Swissquote freeze cannot stop it, which is exactly what makes the wallet non-custodial.</p>
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;color:#E8826E">Tested with real funds on signet: 4419a6e8…1900e2dde7 · signed by phone + card only</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#8FA1B0">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#8FA1B0">11</p>
+</div>
+<aside>The challenge asks how the client gets their money back if Swissquote is permanently gone. Answer: the coins are on the blockchain, not at Swissquote; only the app and servers disappear. Phone plus card are two shares, enough to sign without anyone. We built the Exit Tool as a separate program with its own look, and it has no way to reach the co-signer. We ran it with real funds. Honest note: in production the export must be possible before the app disappears from the stores, so it is designed from day one and works offline.</aside>
+</section>
+
+<section id="gasless" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Bonus · Gasless transactions</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Swissquote pays the network fee</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="width:820px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4A5563">Inputs</p>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #2F6690;border-radius:12px;padding:20px">
+<p style="font-size:26px;font-weight:600;color:#14202B">Client coins</p>
+<p style="font-size:26px;color:#4A5563">53,449 sats</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #B8412E;border-radius:12px;padding:20px">
+<p style="font-size:26px;font-weight:600;color:#14202B">Swissquote fee coin</p>
+<p style="font-size:26px;color:#4A5563">12,000 sats</p>
+</div>
+</div>
+<x-shape kind="arrow-right" style="width:64px;height:32px;background:#14202B"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4A5563">Outputs</p>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #2F6690;border-radius:12px;padding:20px">
+<p style="font-size:26px;color:#14202B">Ana: 3,000</p>
+<p style="font-size:26px;color:#14202B">Client change: 50,449</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #B8412E;border-radius:12px;padding:20px">
+<p style="font-size:26px;color:#14202B">Swissquote change: 11,520</p>
+<p style="font-size:26px;font-weight:600;color:#B8412E">Fee 480: paid by Swissquote</p>
+</div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">How abuse is prevented</h3>
+<ul style="font-size:26px;line-height:1.4;color:#1B2733">
+<li>Only clients with a verified ownership proof</li>
+<li>Swissquote signs its coin last, only for a payment it already co-signed</li>
+<li>At most 1,000 sats a payment; 10 payments and 5,000 sats a day</li>
+<li>Fee rate capped; each fee coin is signed once</li>
+<li>Quota used up: the client pays the fee as usual</li>
+</ul>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">On signet: f70e0a95…00d0959d. The client sent exactly 3,000 sats and paid nothing. On EVM, the same MPC key owns an ERC-4337 account with a Swissquote paymaster for USDC (design).</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">12</p>
+</div>
+<aside>The challenge allows "the equivalent on your chain". On Bitcoin the client's fee comes out of their own coins; we remove that. Swissquote's fee wallet, its own money, adds one coin to the client's payment and that coin pays the whole fee. Who pays: Swissquote, covered by the premium tier and trading revenue. How abuse is prevented: only verified clients, Swissquote signs last and only for a payment it already approved under the normal policy, hard caps per payment and per day, and each coin is used once. Swissquote's signature only commits its own coin, so it can never lose more than the capped fee. Live transaction on screen.</aside>
+</section>
+
+<section id="compliance" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Bonus · Compliant interaction</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Shown before Face ID, enforced by Swissquote</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="width:860px;display:flex;flex-direction:column;gap:18px;background:#14202B;border-radius:20px;padding:36px">
+<p style="font-size:26px;font-weight:600;color:#F5F3EE">Checked before you sign</p>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Check" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Recipient screened: not on sanctions lists</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Verified" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Verified by Swissquote: your Swissquote account</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Warning" style="color:#F0B357;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#F0B357">First payment to this address: check it carefully</p></div>
+<div style="display:flex;flex-direction:row;gap:14px;align-items:center"><x-icon name="Check" style="color:#4FD1A1;width:32px;height:32px"></x-icon><p style="font-size:24px;color:#D7E0E6">Within your limits: CHF 9.35 of CHF 85 spent today</p></div>
+<hr style="border-top:1px solid #3A4B5B">
+<p style="font-size:26px;font-weight:600;color:#F5F3EE">What will happen</p>
+<p style="font-size:24px;line-height:1.45;color:#D7E0E6">Ana Keller receives CHF 2.00. Your balance goes from CHF 42.88 to CHF 40.88. The network fee is paid by Swissquote.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Enforced again when co-signing</h3>
+<ul style="font-size:26px;line-height:1.4;color:#1B2733">
+<li>Sanctioned recipient: refused</li>
+<li>Over the daily limit: refused</li>
+<li>Above the card threshold: refused without a card tap</li>
+<li>Frozen wallet: refused</li>
+</ul>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Next, for DeFi: an approved-dApp list. The co-signer decodes each contract call and co-signs only approved contracts and methods.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">13</p>
+</div>
+<aside>The client never signs blind. The review screen is a plain-language simulation: who gets what, the balance after, who pays the fee. Swissquote's screening runs before Face ID and is shown: sanctions, verified counterparties such as the client's own Swissquote account, a warning on a first payment to a new address (the classic address-swap scam), and the limits. Then the same rules are enforced again on Swissquote's side when co-signing, so a tampered app gains nothing. In the demo we show the sanctioned entity flagged, then refused. What is still design: the approved-dApp list for EVM DeFi.</aside>
+</section>
+
+<section id="legal" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Legal feasibility · Switzerland</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Closer to software than to custody</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #2F6690;border-radius:16px;padding:36px">
+<h3 style="font-size:34px;font-weight:600;color:#14202B">Custody</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5563">Swissquote holds 1 of 3 shares and cannot act alone; no partner holds a share. Blocking a payment is not moving funds.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #2F6690;border-radius:16px;padding:36px">
+<h3 style="font-size:34px;font-weight:600;color:#14202B">Travel Rule</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5563">A BIP-322 ownership proof at creation and after every recovery. Account-to-own-wallet transfers are verified automatically.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FBFAF7;border:1px solid #DAD6CC;border-top:8px solid #B8412E;border-radius:16px;padding:36px">
+<h3 style="font-size:34px;font-weight:600;color:#14202B">Paying third parties</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5563">The client initiates and controls; Swissquote co-signs and screens. We argue it is not the sending institution, and screen anyway.</p>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Simplified reasoning, not legal advice. The grey zone the challenge names is flagged, not hidden: if FINMA disagreed, Swissquote already holds what it would need (owner records, screening, sanctions refusals).</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">14</p>
+</div>
+<aside>Custody depends on who can move the funds. Swissquote cannot move them alone, so this is software with a co-signing service, not a deposit; no capital or segregation rules for these assets. The Travel Rule needs proven ownership of the self-hosted wallet before a Swiss bank sends or receives: our ownership proof makes that check automatic, and the proof is renewed after every recovery. Third-party payments: the client decides, signs and broadcasts; Swissquote only adds a co-signature after screening, like a 2FA provider with compliance checks. That is our argument for "not the sending institution". If a regulator saw it differently, the data needed is already collected.</aside>
+</section>
+
+<section id="business" data-transition="fade" style="background:#E9E5DC;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">6 · Business case</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Self-custody that keeps clients at Swissquote</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F3EE;border-radius:16px;padding:32px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:52px;font-weight:600;color:#2F6690">Retention</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Back to the account in one tap, Travel-Rule-clean.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F3EE;border-radius:16px;padding:32px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:52px;font-weight:600;color:#B8412E">CHF 216k</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">a year: 10,000 users, 20% premium at CHF 9 a month.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F3EE;border-radius:16px;padding:32px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:52px;font-weight:600;color:#B8412E">CHF 500k</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">a year: CHF 50M kept in the ecosystem at 1% trading revenue.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F3EE;border-radius:16px;padding:32px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:52px;font-weight:600;color:#2F6690">Lower cost</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">No custody capital, insurance or cold storage for these assets.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<p style="font-size:28px;line-height:1.4;color:#1B2733">Premium tier: higher limits, metal card, second card, extended backup. Small fees on approved swap and DeFi routes.</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5563">Figures are illustrative assumptions, not Swissquote data. A sponsored fee costs under CHF 1 a payment at normal mainnet fee levels, capped per client, covered by the premium tier.</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#5E6875">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#5E6875">15</p>
+</div>
+<aside>Three levers. Retention: today self-custody means leaving; with this wallet the client's coins stay one tap away, so buying, selling and CHF conversion stay at Swissquote, and deposits back are Travel-Rule-clean because ownership is already proven. Revenue: a premium tier and fees on approved routes. Cost: Swissquote cannot move these funds, so it carries no custody capital, insurance or cold storage for them, and ownership checks are automatic instead of manual. The numbers are illustrative assumptions; say so if asked, and invite the judges to plug in real ones.</aside>
+</section>
+
+<section id="evidence" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Proof</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">Every step is a real transaction on Bitcoin signet</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1B2733">
+<tr><th style="width:34%">Step</th><th style="width:30%">Transaction</th><th style="width:36%">Signed by</th></tr>
+<tr><td>Payment</td><td>bedda5ed…5908</td><td>Phone + Swissquote</td></tr>
+<tr><td>Gasless payment</td><td>f70e0a95…959d</td><td>Phone + Swissquote · fee wallet</td></tr>
+<tr><td>Lost phone: recovery sweep</td><td>a63be18a…6155</td><td>Card + Swissquote</td></tr>
+<tr><td>Lost phone and card</td><td>9b970345…d6a9</td><td>Restored share + Swissquote</td></tr>
+<tr><td>Swissquote gone: Exit Tool</td><td>4419a6e8…dde7</td><td>Phone + card only</td></tr>
+</table>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600;color:#14202B">19 automated tests</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5563">Every share pair signs, one share cannot; BIP-322 official vectors; policy; backup.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DAD6CC;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:600;color:#14202B">No homemade crypto</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5563">DKLs23 (Silence Laboratories), bitcoinjs-lib, noble curves and hashes, Node crypto.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">16</p>
+</div>
+<aside>Use this slide as the safety net if the live demo hits the network: every flow already ran on signet and the links are in the README (blockstream.info/signet/tx/...). The co-signer and the phones ran as separate processes. The tests run in about five seconds with npm test; they include the claim the judges care most about, that one share alone cannot sign, and that an old card share stops working after a re-share.</aside>
+</section>
+
+<section id="limits" data-transition="fade" style="background:#F5F3EE;color:#1B2733;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8412E">Honest limits</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#14202B">What is simulated, and what comes next</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Simulated today, labelled DEMO</h3>
+<ul style="font-size:26px;line-height:1.45;color:#1B2733">
+<li>Recovery card hardware (FIDO2 NFC card)</li>
+<li>Face ID and video identification</li>
+<li>Apple/Google passkey and cloud drive</li>
+<li>Sanctions provider, counterparty directory</li>
+<li>Client login: a token instead of a passkey</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:600;color:#14202B">Known limits, next steps</h3>
+<ul style="font-size:26px;line-height:1.45;color:#1B2733">
+<li>Two shares briefly on one device at creation, recovery and exit: wiped at once</li>
+<li>MPC library licence is non-commercial</li>
+<li>Fee wallet moves to an HSM-backed service</li>
+<li>Taproot design: on-chain timelocks for the exit</li>
+<li>EVM: USDC paymaster and approved-dApp list</li>
+<li>Open source, reproducible builds, audit</li>
+</ul>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7684">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#6B7684">17</p>
+</div>
+<aside>Say the limits before the judges do. Everything simulated is a component a bank buys or already has: FIDO2 cards, video identification providers, sanctions screening, passkey login. The real engineering risk is the moment one device holds two shares; we keep it short and on a fresh device, and the production card would seal its share immediately. The MPC library needs a commercial licence for launch. The Taproot design in WORKFLOW section 15 adds on-chain timelocks so the exit no longer depends on any software.</aside>
+</section>
+
+<section id="close" data-transition="fade" style="background:#A83A29;color:#F7F1EC;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:96px;font-weight:600;line-height:1.08;color:#F7F1EC">Self-custody without leaving Swissquote.</h2>
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:36px;line-height:1.35;color:#F7F1EC">Swissquote can block, never move.</p>
+<p style="font-size:36px;line-height:1.35;color:#F7F1EC">No seed words, and the fees are paid.</p>
+<p style="font-size:36px;line-height:1.35;color:#F7F1EC">Every loss has a way back; thieves do not.</p>
+</div>
+<p style="font-size:32px;font-weight:600;color:#F7F1EC">Thank you. Questions?</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#F2D9D2">Team Two of Three · Sergi Boned &amp; Arnau Ferrer</p>
+<p style="font-size:24px;color:#F2D9D2">Code, README and guide: swissquote-wallet repository</p>
+</div>
+<aside>Close on the three promises, then take questions. Likely questions and short answers are in GUIDE.md, section "Questions the bank may ask". Keep the demo tabs open in case a judge wants to see a flow again.</aside>
+</section>
+
+<section id="app" data-transition="fade" style="background:#14202B;color:#F5F3EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#E8826E">Appendix · The app</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:64px;font-weight:600;line-height:1.1;color:#F5F3EE">What the client sees</h2>
+</div>
+<div style="display:flex;flex-direction:row;justify-content:space-between">
+<div style="width:340px;display:flex;flex-direction:column;align-items:center;gap:14px">
+<img src="../docs/screenshots/phone-home.png" alt="Wallet home: balance, address and ownership verified by Swissquote" style="width:260px;height:560px;object-fit:contain">
+<p style="font-size:24px;text-align:center;color:#C9D2DA">Home: ownership verified</p>
+</div>
+<div style="width:340px;display:flex;flex-direction:column;align-items:center;gap:14px">
+<img src="../docs/screenshots/review-payment.png" alt="Payment review: fee paid by Swissquote, checks and what will happen" style="width:260px;height:560px;object-fit:contain">
+<p style="font-size:24px;text-align:center;color:#C9D2DA">Review: fee paid, checks</p>
+</div>
+<div style="width:340px;display:flex;flex-direction:column;align-items:center;gap:14px">
+<img src="../docs/screenshots/review-sanctioned.png" alt="Review of a payment to a sanctioned address: Swissquote will refuse it" style="width:260px;height:560px;object-fit:contain">
+<p style="font-size:24px;text-align:center;color:#C9D2DA">Sanctioned: refused</p>
+</div>
+<div style="width:340px;display:flex;flex-direction:column;align-items:center;gap:14px">
+<img src="../docs/screenshots/video-identification.png" alt="Recovery: video identification with a demo control" style="width:260px;height:560px;object-fit:contain">
+<p style="font-size:24px;text-align:center;color:#C9D2DA">Recovery: video ID</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#8FA1B0">Swissquote Wallet · EPFL Hackathon 2026</p>
+<p style="font-size:24px;color:#8FA1B0">19</p>
+</div>
+<aside>Backup slide for Q&amp;A or if the live demo cannot run: real screenshots of the prototype. CHF amounts, contact names, Face ID and plain sentences; every simulated part is labelled DEMO.</aside>
+</section>
+
+</div>
+<div id="notes"></div><div id="count"></div>
+<script>
+const slides = [...document.querySelectorAll('#stage > section')];
+const stage = document.getElementById('stage');
+const fit = () => {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `scale(${s}) translate(-50%, -50%)`;
+};
+// Connectors: lines in slide coordinates, drawn into one SVG layer per slide.
+for (const sec of slides) {
+  const wires = sec.querySelectorAll('x-connector');
+  if (!wires.length) continue;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'wires'); svg.setAttribute('viewBox', '0 0 1920 1080');
+  wires.forEach((w, i) => {
+    const [x1, y1, x2, y2] = ['x1', 'y1', 'x2', 'y2'].map(a => Number(w.getAttribute(a)));
+    const color = w.style.color || '#14202B';
+    const width = parseFloat(w.style.borderWidth) || 2;
+    const dashed = (w.style.borderStyle || '').includes('dash');
+    const head = w.getAttribute('head') || 'end';
+    const route = w.getAttribute('route') || 'straight';
+    const pts = route === 'vh' ? [[x1, y1], [x1, y2], [x2, y2]] : route === 'hv' ? [[x1, y1], [x2, y1], [x2, y2]] : [[x1, y1], [x2, y2]];
+    const id = `m${slides.indexOf(sec)}_${i}`;
+    const marker = document.createElementNS(NS, 'marker');
+    marker.setAttribute('id', id); marker.setAttribute('viewBox', '0 0 10 10'); marker.setAttribute('refX', '9'); marker.setAttribute('refY', '5');
+    marker.setAttribute('markerWidth', '5'); marker.setAttribute('markerHeight', '5'); marker.setAttribute('orient', 'auto-start-reverse');
+    const tip = document.createElementNS(NS, 'path'); tip.setAttribute('d', 'M0,0 L10,5 L0,10 z'); tip.setAttribute('fill', color);
+    marker.appendChild(tip); svg.appendChild(marker);
+    const line = document.createElementNS(NS, 'polyline');
+    line.setAttribute('points', pts.map(p => p.join(',')).join(' '));
+    line.setAttribute('fill', 'none'); line.setAttribute('stroke', color); line.setAttribute('stroke-width', width);
+    if (dashed) line.setAttribute('stroke-dasharray', `${width * 3} ${width * 2}`);
+    if (head === 'end' || head === 'both') line.setAttribute('marker-end', `url(#${id})`);
+    if (head === 'both') line.setAttribute('marker-start', `url(#${id})`);
+    svg.appendChild(line);
+    w.remove();
+  });
+  sec.appendChild(svg);
+}
+let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+const notes = document.getElementById('notes');
+const show = n => {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle('on', k === i));
+  notes.textContent = slides[i].querySelector('aside')?.textContent ?? '';
+  document.getElementById('count').textContent = `${i + 1} / ${slides.length}`;
+  history.replaceState(null, '', `#${i + 1}`);
+};
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) show(i + 1);
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) show(i - 1);
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key.toLowerCase() === 'n') notes.style.display = notes.style.display === 'block' ? 'none' : 'block';
+  else if (e.key.toLowerCase() === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+});
+addEventListener('click', e => show(e.clientX > innerWidth / 3 ? i + 1 : i - 1));
+addEventListener('resize', fit);
+addEventListener('hashchange', () => show((parseInt(location.hash.slice(1), 10) || 1) - 1));
+fit(); show(i);
+</script>
+</body></html>
